@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  server-dev:
+    command: yarn start
+    build: 
+      context: ./front-end/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./front-end:/front-end
+    ports:
+      - '8080:3000'
+    networks:
+      - api
+  backend-dev:
+    restart: always
+    build:
+      context: ./back-end/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./back-end:/back-end
+    networks:
+      - api
+    ports:
+      - '5000:5000'
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - api
+networks:
+  api:
