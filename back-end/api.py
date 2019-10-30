@@ -8,6 +8,7 @@ from bson import json_util
 from bson.objectid import ObjectId
 from bson import json_util, ObjectId
 import json
+import requests
 
 from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
@@ -92,6 +93,7 @@ def option_autoreply():
 
         return resp
 
+
 @app.after_request
 def set_allow_origin(resp):
     """ Set origin for GET, POST, PUT, DELETE requests """
@@ -137,14 +139,17 @@ def addService():
         userId = token['payload']['_id']
     except:
         return jsonify({'success': False, 'message': 'Malformed body'}), 400
-    service = services.find_one({"serviceName": serviceName, "userId": token['payload']['_id']})
+    service = services.find_one(
+        {"serviceName": serviceName, "userId": token['payload']['_id']})
     if service is None:
         new_service = services.insert_one(
             {"serviceName": serviceName, "serviceToken": serviceToken, "userId": userId}).inserted_id
         # print(new_user, file=sys.stderr)
-        user_services = list(services.find({"userId": token['payload']['_id']}))
+        user_services = list(services.find(
+            {"userId": token['payload']['_id']}))
         return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
-    services.find_one_and_update({"serviceName": serviceName, "userId": token['payload']['_id']}, {"$set": {"serviceToken": serviceToken}})
+    services.find_one_and_update({"serviceName": serviceName, "userId": token['payload']['_id']}, {
+                                 "$set": {"serviceToken": serviceToken}})
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
 
@@ -156,6 +161,35 @@ def getServices():
     user_services = list(services.find({"userId": token['payload']['_id']}))
     print(user_services, file=sys.stderr)
     return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
+
+
+@app.route('/add_office', methods=['POST'])
+def addOffice():
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    userId = token['payload']['_id']
+    code = request.json['code']
+    form = {'grant_type': 'authorization_code',
+            'code': code,
+            'client_id': '77bf8547-6358-43aa-b5c3-7ec5c96022e3',
+            'client_secret': 'DAI6X?YK6jGw/@4C8ECZmnRponXNUVW:'}
+    r = requests.post(
+        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/token", form)
+    print(r.json(), file=sys.stderr)
+    data = r.json()
+    print(data['access_token'], file=sys.stderr)
+    services = db.services
+    service = services.find_one(
+        {"serviceName": "office365", "userId": token['payload']['_id']})
+    if service is None:
+        new_service = services.insert_one(
+            {"serviceName": "office365", "serviceToken": data['access_token'], "userId": userId}).inserted_id
+        # print(new_user, file=sys.stderr)
+        user_services = list(services.find(
+            {"userId": token['payload']['_id']}))
+        return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
+    services.find_one_and_update({"serviceName": "office365", "userId": token['payload']['_id']}, {
+                                 "$set": {"serviceToken": data['access_token']}})
+    return jsonify({'success': True, 'message': "Service updated"}), 200
 
 
 if __name__ == '__main__':

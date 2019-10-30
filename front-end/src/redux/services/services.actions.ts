@@ -12,6 +12,35 @@ interface ISaveServiceParams {
 	serviceName: String;
 }
 
+export const saveOfficeToken = (code: any) => {
+	return (dispatch: any) => {
+		const token: String | null = window.localStorage.getItem("token");
+		axios
+			.post(
+				"http://localhost:5000/add_office",
+				{ code },
+				{
+					headers: {
+						Authorization: token
+					}
+				}
+			)
+			.then(res => {
+				console.log(res);
+				dispatch({
+					type: GET_SERVICES_SUCCESS,
+					payload: res.data
+				});
+			})
+			.catch(err => {
+				console.log(err.response);
+				dispatch({
+					type: ADD_SERVICE_FAILED
+				});
+			});
+	};
+};
+
 export const saveServiceToken = ({
 	serviceToken,
 	serviceName
@@ -48,18 +77,19 @@ export const saveServiceToken = ({
 export const getServices = () => {
 	return (dispatch: any) => {
 		const token: String | null = window.localStorage.getItem("token");
-		dispatch({type: GET_SERVICES})
+		dispatch({ type: GET_SERVICES });
 		axios
 			.get("http://localhost:5000/services", {
 				headers: {
 					Authorization: token
 				}
-			}).then((res) => {
+			})
+			.then(res => {
 				console.log(res);
-				dispatch({type: GET_SERVICES_SUCCESS, payload: res.data})
+				dispatch({ type: GET_SERVICES_SUCCESS, payload: res.data });
 			})
-			.catch((err) => {
+			.catch(err => {
 				console.log(err);
-			})
-	}
-}
+			});
+	};
+};

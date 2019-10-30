@@ -1,10 +1,11 @@
 import { connect } from "react-redux";
 import { UserProfile } from "./UserProfile";
-import { saveServiceToken, getServices } from "../../redux/services/services.actions";
+import { saveServiceToken, getServices, saveOfficeToken } from "../../redux/services/services.actions";
 
 const mapDispatchToProps = {
     saveServiceToken,
-    getServices
+    getServices,
+    saveOfficeToken
 };
 
 const mapStateToProps = (state: any) => {

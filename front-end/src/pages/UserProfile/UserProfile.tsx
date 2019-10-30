@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Card, message, Button, Icon } from "antd";
+import axios from "axios";
 
 const gridStyle = {
 	width: "25%",
@@ -37,14 +38,9 @@ const UserProfile: React.FC = (props: any) => {
 			});
 		}
 		if (url.includes("office365")) {
-			const serviceName = "office365";
 			const serviceToken = url_arr[4].split("=")[1];
-			console.log(serviceToken);
-			console.log(url_arr);
-			props.saveServiceToken({
-				serviceToken: serviceToken,
-				serviceName: serviceName
-			});
+			console.log(serviceToken.split("&")[0]);
+			props.saveOfficeToken(serviceToken.split("&")[0]);
 		}
 	};
 
@@ -72,17 +68,16 @@ const UserProfile: React.FC = (props: any) => {
 					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
 				)}
 			</Button>
-			<Button size={"large"} type="dashed">
+			<Button
+				size={"large"}
+				type="dashed"
+				onClick={() =>
+					onButtonClick(
+						"https://accounts.google.com/o/oauth2/v2/auth?client_id=660957174231-ljm3stnq13fc6pvu315pk4su036uijal.apps.googleusercontent.com&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000/oauth/google"
+					)
+				}
+			>
 				Google
-				{props.services.filter((e: any) => e.serviceName === "google").length >
-				0 ? (
-					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
-				) : (
-					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
-				)}
-			</Button>
-			<Button size={"large"} type="dashed">
-				Youtube
 				{props.services.filter((e: any) => e.serviceName === "youtube").length >
 				0 ? (
 					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />

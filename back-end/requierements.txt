@@ -2,3 +2,4 @@ Flask
 pymongo
 pyjwt
 flask-cors
+requests
