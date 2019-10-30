@@ -1,17 +1,17 @@
 version: '3.7'
 
 services:
-  server-dev:
-    command: yarn start
-    build: 
-      context: ./front-end/
-      dockerfile: dev.Dockerfile
-    volumes:
-      - ./front-end:/front-end
-    ports:
-      - '8080:3000'
-    networks:
-      - api
+#  server-dev:
+#    command: yarn start
+#    build: 
+#      context: ./front-end/
+#      dockerfile: dev.Dockerfile
+#    volumes:
+#      - ./front-end:/front-end
+#    ports:
+#      - '8080:3000'
+#    networks:
+#      - api
   backend-dev:
     restart: always
     build:

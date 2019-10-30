@@ -52,7 +52,7 @@ const NavbarWrapper: React.FC<any> = (props: any) => {
 				<Container>
 					<Link to="/">Dashboard</Link>
 					<RightLinks>
-						<NavLink exact activeStyle={{ color: "#1890ff" }} to="/login">
+						<NavLink exact activeStyle={{ color: "#1890ff" }} to="/profile">
 							{props.user.username}
 						</NavLink>
 						<a onClick={() => logOutHandler()}>

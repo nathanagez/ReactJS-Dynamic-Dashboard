@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux'
 import login from "./login/login.reducers";
+import checkAuth from "./MainLayout/MainLayout.reducers";
+import services from "./services/services.reducers";
 
 export default combineReducers({
-    login: login
+    login,
+    checkAuth,
+    services
 });

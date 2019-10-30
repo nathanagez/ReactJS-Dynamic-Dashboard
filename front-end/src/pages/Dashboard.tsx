@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { UserProfile } from "./UserProfile";
 
 const Container = styled.div`
 	width: 100%;
@@ -10,7 +9,7 @@ const Container = styled.div`
 const Dashboard: React.FC = () => {
 	return (
 		<Container>
-			<UserProfile />
+			<h1>Dashboard</h1>
 		</Container>
 	);
 };

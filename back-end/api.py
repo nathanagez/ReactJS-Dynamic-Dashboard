@@ -2,10 +2,14 @@ import os
 import sys
 import hashlib
 import jwt
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from pymongo import MongoClient
 from bson import json_util
 from bson.objectid import ObjectId
+from bson import json_util, ObjectId
+import json
+
+from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -87,6 +91,7 @@ def option_autoreply():
             h['Access-Control-Allow-Headers'] = headers
 
         return resp
+
 @app.after_request
 def set_allow_origin(resp):
     """ Set origin for GET, POST, PUT, DELETE requests """
@@ -98,9 +103,11 @@ def set_allow_origin(resp):
         h['Access-Control-Allow-Origin'] = request.headers['Origin']
 
     return resp
+
+
 def hook():
     # Allow the actual method
-    if request.endpoint == 'getUser':
+    if request.endpoint != 'login' and request.endpoint != 'register':
         print(request.headers.get('Authorization'), file=sys.stderr)
         try:
             jwt.decode(request.headers.get(
@@ -118,6 +125,37 @@ def getUser():
     user['_id'] = str(user['_id'])
     print(user, file=sys.stderr)
     return jsonify({'success': True, 'userData': user}), 200
+
+
+@app.route('/add_service', methods=['POST'])
+def addService():
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    services = db.services
+    try:
+        serviceName = request.json['serviceName']
+        serviceToken = request.json['serviceToken']
+        userId = token['payload']['_id']
+    except:
+        return jsonify({'success': False, 'message': 'Malformed body'}), 400
+    service = services.find_one({"serviceName": serviceName, "userId": token['payload']['_id']})
+    if service is None:
+        new_service = services.insert_one(
+            {"serviceName": serviceName, "serviceToken": serviceToken, "userId": userId}).inserted_id
+        # print(new_user, file=sys.stderr)
+        user_services = list(services.find({"userId": token['payload']['_id']}))
+        return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
+    services.find_one_and_update({"serviceName": serviceName, "userId": token['payload']['_id']}, {"$set": {"serviceToken": serviceToken}})
+    return jsonify({'success': True, 'message': "Service updated"}), 200
+
+
+@app.route('/services', methods=['GET'])
+def getServices():
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    print(token['payload']['_id'], file=sys.stderr)
+    services = db.services
+    user_services = list(services.find({"userId": token['payload']['_id']}))
+    print(user_services, file=sys.stderr)
+    return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
 
 
 if __name__ == '__main__':

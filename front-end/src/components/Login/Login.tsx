@@ -33,11 +33,13 @@ const Login: React.FC = (props: any, state) => {
 	};
 
 	useEffect(() => {
-		if (props.user) {
+		const {user, error} = props;
+		if (user) {
 			message.success('Successfully connected! 😛')
 			history.push('/dashboard')
 		}
 	})
+
 	return (
 		<Container>
 			<Form onSubmit={handleSubmit} className="login-form">

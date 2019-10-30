@@ -1,6 +1,6 @@
 import React from "react";
 import "antd/dist/antd.css";
-import MainLayout from "./pages/MainLayout";
+import {MainLayout} from "./pages/MainLayout";
 import { createStore, applyMiddleware } from "redux";
 import {Provider} from "react-redux";
 import thunk from 'redux-thunk';

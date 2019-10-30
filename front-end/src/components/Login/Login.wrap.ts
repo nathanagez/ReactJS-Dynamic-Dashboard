@@ -5,7 +5,8 @@ import { logUserIn } from "../../redux/login/login.actions";
 const mapStateToProps = (state: any) => {
 	return {
 		user: state.login.user,
-		loading: state.login.loading
+		loading: state.login.loading,
+		error: state.login.error
 	};
 };
 

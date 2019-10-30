@@ -1,4 +1,4 @@
 export * from "./LandingPage";
-export * from "./MainLayout";
+export * from "./MainLayout/MainLayout";
 export * from "./Dashboard";
 export * from "./UserProfile";

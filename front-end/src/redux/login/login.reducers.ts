@@ -12,7 +12,7 @@ export default (state = INITIAL_STATE, action: any) => {
 		case LOG_IN_SUCCESS:
 			return { ...state, user: action.payload, loading: false };
 		case LOG_IN_FAILED:
-			return { ...state, user: null, loading: false };
+			return { ...state, user: null, loading: false};
 		case LOG_OUT:
 			return {...state, user: null}
 		default:
