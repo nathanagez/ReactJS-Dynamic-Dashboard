@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Card, message, Button, Icon } from "antd";
+import { Input, Modal, Button, Icon } from "antd";
 import axios from "axios";
 
 const gridStyle = {
@@ -21,6 +21,8 @@ function callback(key: any) {
 }
 
 const UserProfile: React.FC = (props: any) => {
+	const [isVisible, setVisible] = useState(false);
+
 	useEffect(() => {
 		handleCallbackUrl(window.location.href);
 		props.getServices();
@@ -71,13 +73,12 @@ const UserProfile: React.FC = (props: any) => {
 			<Button
 				size={"large"}
 				type="dashed"
-				onClick={() =>
-					onButtonClick(
-						"https://accounts.google.com/o/oauth2/v2/auth?client_id=660957174231-ljm3stnq13fc6pvu315pk4su036uijal.apps.googleusercontent.com&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000/oauth/google"
-					)
-				}
+				onClick={() => {
+					window.open("https://intra.epitech.eu/admin/autolog", "_blank");
+					setVisible(true);
+				}}
 			>
-				Google
+				Epitech
 				{props.services.filter((e: any) => e.serviceName === "youtube").length >
 				0 ? (
 					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
@@ -102,34 +103,16 @@ const UserProfile: React.FC = (props: any) => {
 					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
 				)}
 			</Button>
-			{/*<Card
-				title="Yammer"
-				extra={
-					<a href="https://www.yammer.com/oauth2/authorize?client_id=oaeaGzaLetwE3X0U3JirQ&response_type=token&redirect_uri=http://localhost:3000/oauth/yammer">
-						{props.name ? "Unlink your account" : "Link your account"}
-					</a>
-				}
-				style={{ width: 300 }}
-			></Card>
-			<Card
-				title="Google"
-				extra={
-					<a href="#">
-						Link your account
-					</a>
-				}
-				style={{ width: 300 }}
-			></Card>
-			<Card
-				title="Office365"
-				extra={<a href="#">Link your account</a>}
-				style={{ width: 300 }}
-			></Card>
-			<Card
-				title="Youtube"
-				extra={<a href="#">Link your account</a>}
-				style={{ width: 300 }}
-			></Card>*/}
+
+			<Modal
+				title="Autologin link"
+				visible={isVisible}
+				okText={"Link account"}
+				onCancel={() => setVisible(false)}
+			>
+				<Input addonBefore="http://intra.epitech.eu/auth-" defaultValue="" />
+			</Modal>
+
 		</Container>
 	);
 };
