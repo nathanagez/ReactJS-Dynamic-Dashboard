@@ -1,0 +1,1 @@
+export { default as FollowingMessages } from "./FollowingMessages.wrap";

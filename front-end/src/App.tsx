@@ -1,5 +1,7 @@
 import React from "react";
 import "antd/dist/antd.css";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 import {MainLayout} from "./pages/MainLayout";
 import { createStore, applyMiddleware } from "redux";
 import {Provider} from "react-redux";

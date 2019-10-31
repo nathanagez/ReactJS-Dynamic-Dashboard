@@ -9,7 +9,7 @@ import {
 	Route,
 	useHistory
 } from "react-router-dom";
-import { Dashboard } from "../Dashboard";
+import { Dashboard } from "../Dashboard/";
 import { PrivateRoute } from "../../components/Protected/";
 import { UserProfile } from "../UserProfile";
 

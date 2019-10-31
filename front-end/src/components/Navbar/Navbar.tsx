@@ -53,7 +53,7 @@ const NavbarWrapper: React.FC<any> = (props: any) => {
 					<Link to="/">Dashboard</Link>
 					<RightLinks>
 						<NavLink exact activeStyle={{ color: "#1890ff" }} to="/profile">
-							{props.user.username}
+							Settings
 						</NavLink>
 						<a onClick={() => logOutHandler()}>
 							Disconnect
