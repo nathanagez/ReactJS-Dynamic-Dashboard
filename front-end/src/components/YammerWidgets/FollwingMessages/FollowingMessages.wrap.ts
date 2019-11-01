@@ -1,4 +1,10 @@
 import { connect } from "react-redux";
 import {FollowingMessagesWrapper} from "./FollowingMessages";
 
-export default connect(null, null)(FollowingMessagesWrapper);
+const mapStateToProps = (state: any) => {
+    return {
+        services: state.services.services
+    }
+}
+
+export default connect(mapStateToProps, null)(FollowingMessagesWrapper);

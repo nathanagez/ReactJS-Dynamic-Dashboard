@@ -2,7 +2,10 @@ import {connect} from "react-redux";
 import {MessageWidgetWrapper} from "./MessageWidget";
 
 const mapStateToProps = (state: any) => {
-    return {};
+    return {
+        services: state.services.services
+    }
 }
+
 
 export default connect(mapStateToProps, null)(MessageWidgetWrapper);

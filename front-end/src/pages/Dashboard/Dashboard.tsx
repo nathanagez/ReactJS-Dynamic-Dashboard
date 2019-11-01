@@ -5,6 +5,7 @@ import GridLayout from "react-grid-layout";
 import ResponsiveReactGridLayout from "react-grid-layout";
 import { MessageWidget } from "../../components/YammerWidgets/MessagesWidget";
 import { FollowingMessages } from "../../components/YammerWidgets/FollwingMessages";
+import { OutlookMails } from "../../components/OfficeWidgets/OutlookMails";
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -40,7 +41,11 @@ const Dashboard: React.FC = (props: any) => {
 	};
 
 	const handleClose = (id: any) => {
-		const removeIndex = layout.map(function(item) { return item.i; }).indexOf(id);
+		const removeIndex = layout
+			.map(function(item) {
+				return item.i;
+			})
+			.indexOf(id);
 		layout.splice(removeIndex, 1);
 		setLayout([...layout]);
 	};
@@ -74,16 +79,38 @@ const Dashboard: React.FC = (props: any) => {
 					}
 				]);
 				break;
+			case "outlook#mails":
+				setLayout([
+					...layout,
+					{
+						i: (globalId++).toString(),
+						x: 0,
+						y: 0,
+						w: 6,
+						h: 10,
+						component: <OutlookMails />
+					}
+				]);
+				break;
 		}
 	};
 	useEffect(() => {
 		const servs = `Actually ${props.services.length} services are up! Please link your accounts in settings section!`;
-		console.log(props.services);
 		notification["warning"]({
 			message: "Link your accounts!",
 			description: servs
 		});
 	}, []);
+
+	const yammerService = props.services.find(
+		(item: any) => item.serviceName === "yammer"
+	);
+	const office365Service = props.services.find(
+		(item: any) => item.serviceName === "office365"
+	);
+	const epitechService = props.services.find(
+		(item: any) => item.serviceName === "epitech"
+	);
 
 	return (
 		<Container>
@@ -97,16 +124,27 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item onClick={handleClick} key={"epi#message"}>
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item
+						disabled={epitechService === undefined}
+						onClick={handleClick}
+						key={"epi#message"}
+					>
+						<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
 						Messages
 					</Menu.Item>
-					<Menu.Item onClick={handleClick} key={"epi#group"}>
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item
+						disabled={epitechService === undefined}
+						onClick={handleClick}
+						key={"epi#group"}
+					>
+						<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
 						Group messages
 					</Menu.Item>
-					<Menu.Item key="7">
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item disabled={epitechService === undefined} key="7">
+					<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
 						Widget lol
 					</Menu.Item>
 				</SubMenu>
@@ -119,16 +157,27 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item onClick={handleClick} key={"yammer#message"}>
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item
+						disabled={yammerService === undefined}
+						onClick={handleClick}
+						key={"yammer#message"}
+					>
+						<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
 						Messages
 					</Menu.Item>
-					<Menu.Item onClick={handleClick} key={"yammer#group"}>
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item
+						disabled={yammerService === undefined}
+						onClick={handleClick}
+						key={"yammer#group"}
+					>
+						<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
 						Group messages
 					</Menu.Item>
-					<Menu.Item key="7">
-						<Icon type="plus-circle" theme="twoTone" twoToneColor="#52c41a" />
+					<Menu.Item disabled={yammerService === undefined} key="7">
+					<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
 						Widget lol
 					</Menu.Item>
 				</SubMenu>
@@ -141,10 +190,25 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item key="9">Option 9</Menu.Item>
-					<Menu.Item key="10">Option 10</Menu.Item>
-					<Menu.Item key="11">Option 11</Menu.Item>
-					<Menu.Item key="12">Option 12</Menu.Item>
+					<Menu.Item
+						onClick={handleClick}
+						key={"outlook#mails"}
+						disabled={office365Service === undefined}
+					>
+						<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						Outlook mails
+					</Menu.Item>
+					<Menu.Item key="10" disabled={office365Service === undefined}>
+					<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						Option 10
+					</Menu.Item>
+					<Menu.Item key="11" disabled={office365Service === undefined}>
+					<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
+						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						Option 11
+					</Menu.Item>
 				</SubMenu>
 			</Menu>
 			<Tabs tabPosition="top" style={{ width: "100%" }}>

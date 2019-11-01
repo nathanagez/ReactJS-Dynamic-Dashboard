@@ -182,15 +182,32 @@ def addOffice():
         {"serviceName": "office365", "userId": token['payload']['_id']})
     if service is None:
         new_service = services.insert_one(
-            {"serviceName": "office365", "serviceToken": data['access_token'], "userId": userId}).inserted_id
+            {"serviceName": "office365", "serviceToken": data['access_token'], "refresh_token": data['refresh_token'],"userId": userId}).inserted_id
         # print(new_user, file=sys.stderr)
         user_services = list(services.find(
             {"userId": token['payload']['_id']}))
         return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
     services.find_one_and_update({"serviceName": "office365", "userId": token['payload']['_id']}, {
-                                 "$set": {"serviceToken": data['access_token']}})
+                                 "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
+@app.route('/update_officeToken', methods=['GET'])
+def updateToken():
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    services = db.services
+    service = services.find_one(
+        {"serviceName": "office365", "userId": token['payload']['_id']})
+    userId = token['payload']['_id']
+    form = {'grant_type': 'refresh_token',
+            'refresh_token': service['refresh_token'],
+            'client_id': '77bf8547-6358-43aa-b5c3-7ec5c96022e3',
+            'client_secret': 'DAI6X?YK6jGw/@4C8ECZmnRponXNUVW:'}
+    r = requests.post(
+        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/token", form)
+    data = r.json()
+    services.find_one_and_update({"serviceName": "office365", "userId": token['payload']['_id']}, {
+                                 "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
+    return jsonify({'success': True, 'message': "Service updated"}), 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=5000)

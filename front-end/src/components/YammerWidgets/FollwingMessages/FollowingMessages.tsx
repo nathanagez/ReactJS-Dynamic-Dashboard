@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { message, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { message, Tag, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
 
 const Container = styled.div`
 	width: 100%;
 	height: 100%;
 `;
 
-const headers = {
-	headers: {
-		Authorization: "Bearer 106950-zB7Tz0VUesP5CiwiCy8Uw"
-	}
-};
-
-const FollowingMessagesWrapper: React.FC = () => {
+const FollowingMessagesWrapper: React.FC = (props: any) => {
 	let intervalId: number = 0;
 	const [messages, setMessages] = useState([]);
 	const [group, setGroup] = useState(null);
@@ -26,6 +20,16 @@ const FollowingMessagesWrapper: React.FC = () => {
 	useEffect(() => {
 		getCurrentUser();
 	}, []);
+
+	const yammer = props.services.find(
+		(item: any) => item.serviceName === "yammer"
+	);
+	
+	const headers = {
+		headers: {
+			Authorization: `Bearer ${yammer.serviceToken}`
+		}
+	};
 
 	const getCurrentUser = async () => {
 		const res = await axios.get(
@@ -58,8 +62,8 @@ const FollowingMessagesWrapper: React.FC = () => {
 		// clearInterval(intervalId);
 		setLimit(ev.keyPath[1]);
 		setGroup(ev.item.props.children);
-        getMessage(ev.keyPath[0]);
-        /*
+		getMessage(ev.keyPath[0]);
+		/*
 		intervalId = setInterval(() => {
 			getMessage(ev.keyPath[0]);
         }, 5000);
@@ -109,6 +113,7 @@ const FollowingMessagesWrapper: React.FC = () => {
 					dataSource={messages.slice(0, limit)}
 					renderItem={(item: any, key) => (
 						<List.Item>
+							<Tag color="blue" onClick={() => window.open(item.web_url, "_blank")}>Open thread</Tag>
 							<Badge status="processing" key={key} text={item.body.parsed} />
 						</List.Item>
 					)}

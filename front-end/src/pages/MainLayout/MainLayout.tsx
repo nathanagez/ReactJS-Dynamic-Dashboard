@@ -18,6 +18,8 @@ const MainLayoutWrapper: React.FC = (props: any) => {
 
 	useEffect(() => {
 		props.checkToken();
+		props.getServices();
+		console.log(props.services);
 	}, []);
 
 	return (

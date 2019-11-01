@@ -91,7 +91,7 @@ const UserProfile: React.FC = (props: any) => {
 				type="dashed"
 				onClick={() =>
 					onButtonClick(
-						"https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/authorize?client_id=77bf8547-6358-43aa-b5c3-7ec5c96022e3&scope=Mail.Read%20Mail.Read.Shared%20User.Read&response_type=code"
+						"https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/authorize?client_id=77bf8547-6358-43aa-b5c3-7ec5c96022e3&scope=offline_access%20Mail.Read%20Mail.Read.Shared%20User.Read&response_type=code"
 					)
 				}
 			>

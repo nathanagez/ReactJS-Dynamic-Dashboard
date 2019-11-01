@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
-import { message, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { message, Tag, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -8,7 +8,7 @@ const Container = styled.div`
 	height: 100%;
 `;
 
-const MessageWidgetWrapper: React.FC = () => {
+const MessageWidgetWrapper: React.FC = (props: any) => {
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [limit, setLimit] = useState(20);
@@ -17,19 +17,26 @@ const MessageWidgetWrapper: React.FC = () => {
 		getMessage();
 	}, []);
 
+	const yammer = props.services.find(
+		(item: any) => item.serviceName === "yammer"
+	);
+
+	const headers = {
+		headers: {
+			Authorization: `Bearer ${yammer.serviceToken}`
+		}
+	};
+
 	const getMessage = async () => {
 		try {
 			setLoading(true);
 			const res = await axios.get(
 				"https://api.yammer.com/api/v1/messages.json",
-				{
-					headers: {
-						Authorization: "Bearer 106950-zB7Tz0VUesP5CiwiCy8Uw"
-					}
-				}
+				headers
 			);
 			setLoading(false);
 			setMessages(res.data.messages);
+			console.log(res.data);
 		} catch (error) {
 			setLoading(false);
 		}
@@ -60,6 +67,7 @@ const MessageWidgetWrapper: React.FC = () => {
 					dataSource={messages.slice(0, limit)}
 					renderItem={(item: any, key) => (
 						<List.Item>
+							<Tag color="blue" onClick={() => window.open(item.web_url, "_blank")}>Open thread</Tag>
 							<Badge status="processing" key={key} text={item.body.parsed} />
 						</List.Item>
 					)}
