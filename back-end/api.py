@@ -209,5 +209,31 @@ def updateToken():
                                  "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
+@app.route('/epitech/<path>', methods=['GET'])
+def epitechApi(path):
+    print(path, file=sys.stderr)
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    services = db.services
+    service = services.find_one(
+        {"serviceName": "epitech", "userId": token['payload']['_id']})
+    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/notification/" + path + "?format=json");
+    print(r, file=sys.stderr)
+    data = r.json()
+    return jsonify({'success': True, 'alerts': data}), 200
+
+@app.route('/epitech/user/', methods=['GET'])
+def epitechUser():
+    token = jwt.decode(request.headers['Authorization'], secret, verify=True)
+    services = db.services
+    service = services.find_one(
+        {"serviceName": "epitech", "userId": token['payload']['_id']})
+    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/?format=json");
+    data = r.json()
+    print(data["login"], file=sys.stderr)
+    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/" + data["login"] + "/notes/" "?format=json");
+    #print(a, file=sys.stderr)
+    data = r.json()
+    return jsonify({'success': True, 'user_data': data}), 200
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=5000)

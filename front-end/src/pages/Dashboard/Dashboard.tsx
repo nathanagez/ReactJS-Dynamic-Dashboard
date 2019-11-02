@@ -6,6 +6,8 @@ import ResponsiveReactGridLayout from "react-grid-layout";
 import { MessageWidget } from "../../components/YammerWidgets/MessagesWidget";
 import { FollowingMessages } from "../../components/YammerWidgets/FollwingMessages";
 import { OutlookMails } from "../../components/OfficeWidgets/OutlookMails";
+import { Alerts } from "../../components/EpitechWidgets/Alerts";
+import { Modules } from "../../components/EpitechWidgets/Modules";
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -92,6 +94,32 @@ const Dashboard: React.FC = (props: any) => {
 					}
 				]);
 				break;
+			case "epi#alerts":
+				setLayout([
+					...layout,
+					{
+						i: (globalId++).toString(),
+						x: 0,
+						y: 0,
+						w: 6,
+						h: 10,
+						component: <Alerts />
+					}
+				]);
+				break;
+			case "epi#grades":
+				setLayout([
+					...layout,
+					{
+						i: (globalId++).toString(),
+						x: 0,
+						y: 0,
+						w: 6,
+						h: 10,
+						component: <Modules />
+					}
+				]);
+				break;
 		}
 	};
 	useEffect(() => {
@@ -127,24 +155,45 @@ const Dashboard: React.FC = (props: any) => {
 					<Menu.Item
 						disabled={epitechService === undefined}
 						onClick={handleClick}
-						key={"epi#message"}
+						key={"epi#alerts"}
 					>
-						<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
-						Messages
+						<Icon
+							type={
+								epitechService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								epitechService === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
+						Alerts
 					</Menu.Item>
 					<Menu.Item
 						disabled={epitechService === undefined}
 						onClick={handleClick}
-						key={"epi#group"}
+						key={"epi#grades"}
 					>
-						<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
-						Group messages
+						<Icon
+							type={
+								epitechService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								epitechService === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
+						Grades
 					</Menu.Item>
 					<Menu.Item disabled={epitechService === undefined} key="7">
-					<Icon type={epitechService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={epitechService === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								epitechService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								epitechService === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
 						Widget lol
 					</Menu.Item>
 				</SubMenu>
@@ -162,8 +211,13 @@ const Dashboard: React.FC = (props: any) => {
 						onClick={handleClick}
 						key={"yammer#message"}
 					>
-						<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								yammerService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+						/>
 						Messages
 					</Menu.Item>
 					<Menu.Item
@@ -171,13 +225,23 @@ const Dashboard: React.FC = (props: any) => {
 						onClick={handleClick}
 						key={"yammer#group"}
 					>
-						<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								yammerService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+						/>
 						Group messages
 					</Menu.Item>
 					<Menu.Item disabled={yammerService === undefined} key="7">
-					<Icon type={yammerService === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								yammerService === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+						/>
 						Widget lol
 					</Menu.Item>
 				</SubMenu>
@@ -195,23 +259,44 @@ const Dashboard: React.FC = (props: any) => {
 						key={"outlook#mails"}
 						disabled={office365Service === undefined}
 					>
-						<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								office365Service === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								office365Service === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
 						Outlook mails
 					</Menu.Item>
 					<Menu.Item key="10" disabled={office365Service === undefined}>
-					<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								office365Service === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								office365Service === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
 						Option 10
 					</Menu.Item>
 					<Menu.Item key="11" disabled={office365Service === undefined}>
-					<Icon type={office365Service === undefined ? "close-circle" : "plus-circle"} 
-						theme="twoTone" twoToneColor={office365Service === undefined ? "#eb2f96" : "#52c41a"} />
+						<Icon
+							type={
+								office365Service === undefined ? "close-circle" : "plus-circle"
+							}
+							theme="twoTone"
+							twoToneColor={
+								office365Service === undefined ? "#eb2f96" : "#52c41a"
+							}
+						/>
 						Option 11
 					</Menu.Item>
 				</SubMenu>
 			</Menu>
-			<Tabs tabPosition="top" style={{ width: "100%" }}>
+			<Tabs tabPosition="top" style={{ width: "100%", overflow: "auto" }}>
 				<TabPane tab="Dashboard #1" key="1">
 					<ResponsiveReactGridLayout
 						className="layout"

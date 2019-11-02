@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { UserProfile } from "./UserProfile";
+import { Wrapper } from "./UserProfile";
 import { saveServiceToken, getServices, saveOfficeToken } from "../../redux/services/services.actions";
 
 const mapDispatchToProps = {
@@ -18,4 +18,4 @@ const mapStateToProps = (state: any) => {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(UserProfile);
+)(Wrapper);

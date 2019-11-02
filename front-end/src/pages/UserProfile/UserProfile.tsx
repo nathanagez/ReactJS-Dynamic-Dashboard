@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Input, Modal, Button, Icon } from "antd";
+import { Input, Form, Modal, Button, Icon, Card, Tag } from "antd";
 import axios from "axios";
 
 const gridStyle = {
@@ -10,10 +10,10 @@ const gridStyle = {
 
 const Container = styled.div`
 	width: 100%;
-	height: 100%;
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	grid-gap: 10px;
+	height: calc(100% - 63px);
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 `;
 
 function callback(key: any) {
@@ -22,6 +22,8 @@ function callback(key: any) {
 
 const UserProfile: React.FC = (props: any) => {
 	const [isVisible, setVisible] = useState(false);
+	const { form } = props;
+	const { getFieldDecorator } = form;
 
 	useEffect(() => {
 		handleCallbackUrl(window.location.href);
@@ -38,8 +40,7 @@ const UserProfile: React.FC = (props: any) => {
 				serviceToken: serviceToken,
 				serviceName: serviceName
 			});
-		}
-		if (url.includes("office365")) {
+		} else if (url.includes("office365")) {
 			const serviceToken = url_arr[4].split("=")[1];
 			console.log(serviceToken.split("&")[0]);
 			props.saveOfficeToken(serviceToken.split("&")[0]);
@@ -51,70 +52,119 @@ const UserProfile: React.FC = (props: any) => {
 		window.open(link, "_self");
 	};
 
+	const handleForm = () => {
+		form.validateFields((err: any, values: any) => {
+			if (err) {
+				return;
+			}
+
+			console.log("Received values of form: ", values);
+			form.resetFields();
+			setVisible(false);
+			props.saveServiceToken({
+				serviceToken: values.token,
+				serviceName: "epitech"
+			});
+		});
+	};
+
 	return (
 		<Container>
-			<Button
-				size={"large"}
-				type="dashed"
-				onClick={() =>
-					onButtonClick(
-						"https://www.yammer.com/oauth2/authorize?client_id=oaeaGzaLetwE3X0U3JirQ&response_type=token&redirect_uri=http://localhost:3000/oauth/yammer"
+			<Card
+				hoverable
+				style={{ width: 240 }}
+				title={"Office365"}
+				extra={
+					props.services.filter((e: any) => e.serviceName === "office365")
+						.length > 0 ? (
+						<Tag color="green">Linked</Tag>
+					) : (
+						<Tag color="red">Not link</Tag>
 					)
 				}
-			>
-				Yammer
-				{props.services.filter((e: any) => e.serviceName === "yammer").length >
-				0 ? (
-					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
-				) : (
-					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
-				)}
-			</Button>
-			<Button
-				size={"large"}
-				type="dashed"
-				onClick={() => {
-					window.open("https://intra.epitech.eu/admin/autolog", "_blank");
-					setVisible(true);
-				}}
-			>
-				Epitech
-				{props.services.filter((e: any) => e.serviceName === "youtube").length >
-				0 ? (
-					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
-				) : (
-					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
-				)}
-			</Button>
-			<Button
-				size={"large"}
-				type="dashed"
 				onClick={() =>
 					onButtonClick(
 						"https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/authorize?client_id=77bf8547-6358-43aa-b5c3-7ec5c96022e3&scope=offline_access%20Mail.Read%20Mail.Read.Shared%20User.Read&response_type=code"
 					)
 				}
 			>
-				Office365
-				{props.services.filter((e: any) => e.serviceName === "office365")
-					.length > 0 ? (
-					<Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
-				) : (
-					<Icon type="close-circle" theme="twoTone" twoToneColor="red" />
-				)}
-			</Button>
-
+				<ul>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+				</ul>
+			</Card>
+			<Card
+				hoverable
+				style={{ width: 240 }}
+				title={"Yammer"}
+				extra={
+					props.services.filter((e: any) => e.serviceName === "yammer").length >
+					0 ? (
+						<Tag color="green">Linked</Tag>
+					) : (
+						<Tag color="red">Not link</Tag>
+					)
+				}
+				onClick={() =>
+					onButtonClick(
+						"https://www.yammer.com/oauth2/authorize?client_id=oaeaGzaLetwE3X0U3JirQ&response_type=token&redirect_uri=http://localhost:3000/oauth/yammer"
+					)
+				}
+			>
+				<ul>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+				</ul>
+			</Card>
+			<Card
+				hoverable
+				onClick={() => {
+					window.open("https://intra.epitech.eu/admin/autolog", "_blank");
+					setVisible(true);
+				}}
+				style={{ width: 240 }}
+				title={"Epitech"}
+				extra={
+					props.services.filter((e: any) => e.serviceName === "epitech")
+						.length > 0 ? (
+						<Tag color="green">Linked</Tag>
+					) : (
+						<Tag color="red">Not link</Tag>
+					)
+				}
+			>
+				<ul>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+					<li>Activities widgets</li>
+				</ul>
+			</Card>
 			<Modal
 				title="Autologin link"
 				visible={isVisible}
 				okText={"Link account"}
+				onOk={handleForm}
 				onCancel={() => setVisible(false)}
 			>
-				<Input addonBefore="http://intra.epitech.eu/auth-" defaultValue="" />
+				<Form layout="vertical">
+					<Form.Item label="Autologin token">
+						{getFieldDecorator("token", {
+							rules: [
+								{
+									required: true,
+									message: "Please input yout autologin"
+								}
+							]
+						})(<Input addonBefore="http://intra.epitech.eu/auth-" />)}
+					</Form.Item>
+				</Form>
 			</Modal>
-
 		</Container>
 	);
 };
 
-export { UserProfile };
+const Wrapper = Form.create({ name: "epitech" })(UserProfile);
+
+export { Wrapper };
