@@ -26,7 +26,6 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 			setMessages(res.data.value);
 		})
 		.catch((err) => {
-			console.log(err.response);
 			if (err.response.data.error.message === "Access token has expired.") {
 				axios.get("http://localhost:5000/update_officeToken", {
 					headers: {

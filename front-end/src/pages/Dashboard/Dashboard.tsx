@@ -8,6 +8,8 @@ import { FollowingMessages } from "../../components/YammerWidgets/FollwingMessag
 import { OutlookMails } from "../../components/OfficeWidgets/OutlookMails";
 import { Alerts } from "../../components/EpitechWidgets/Alerts";
 import { Modules } from "../../components/EpitechWidgets/Modules";
+import { PersonnalMessages } from "../../components/YammerWidgets/PersonnalMessages";
+import { SchoolNotes } from "../../components/EpitechWidgets/SchoolNotes";
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -20,8 +22,12 @@ const Container = styled.div`
 `;
 
 const Dashboard: React.FC = (props: any) => {
-	const menuLayout: Array<any> = [];
-	const [layout, setLayout] = useState(menuLayout);
+	const menuLayout: any = []
+	const [layout1, setLayout1] = useState(menuLayout);
+	const [layout2, setLayout2] = useState(menuLayout);
+	const [layout3, setLayout3] = useState(menuLayout);
+	const [activeTab, setActiveTab] = useState("tab1");
+
 	const createElement = (el: any) => {
 		return (
 			<div key={el.i}>
@@ -43,85 +49,350 @@ const Dashboard: React.FC = (props: any) => {
 	};
 
 	const handleClose = (id: any) => {
-		const removeIndex = layout
-			.map(function(item) {
-				return item.i;
-			})
-			.indexOf(id);
-		layout.splice(removeIndex, 1);
-		setLayout([...layout]);
-	};
+		let removeIndex = 0;
 
-	const handleClick = (ev: any) => {
-		console.log(ev.key);
-		switch (ev.key) {
-			case "yammer#message":
-				setLayout([
-					...layout,
-					{
-						i: (globalId++).toString(),
-						x: 0,
-						y: 0,
-						w: 6,
-						h: 10,
-						component: <MessageWidget />
-					}
-				]);
+		switch (activeTab) {
+			case "tab1":
+				removeIndex = layout1
+					.map(function(item: any) {
+						return item.i;
+					})
+					.indexOf(id);
+				layout1.splice(removeIndex, 1);
+				setLayout1([...layout1]);
 				break;
-			case "yammer#group":
-				setLayout([
-					...layout,
-					{
-						i: (globalId++).toString(),
-						x: 0,
-						y: 0,
-						w: 6,
-						h: 10,
-						component: <FollowingMessages />
-					}
-				]);
+			case "tab2":
+				removeIndex = layout2
+					.map(function(item: any) {
+						return item.i;
+					})
+					.indexOf(id);
+				layout2.splice(removeIndex, 1);
+				setLayout2([...layout2]);
 				break;
-			case "outlook#mails":
-				setLayout([
-					...layout,
-					{
-						i: (globalId++).toString(),
-						x: 0,
-						y: 0,
-						w: 6,
-						h: 10,
-						component: <OutlookMails />
-					}
-				]);
-				break;
-			case "epi#alerts":
-				setLayout([
-					...layout,
-					{
-						i: (globalId++).toString(),
-						x: 0,
-						y: 0,
-						w: 6,
-						h: 10,
-						component: <Alerts />
-					}
-				]);
-				break;
-			case "epi#grades":
-				setLayout([
-					...layout,
-					{
-						i: (globalId++).toString(),
-						x: 0,
-						y: 0,
-						w: 6,
-						h: 10,
-						component: <Modules />
-					}
-				]);
+			case "tab3":
+				removeIndex = layout3
+					.map(function(item: any) {
+						return item.i;
+					})
+					.indexOf(id);
+				layout3.splice(removeIndex, 1);
+				setLayout3([...layout3]);
 				break;
 		}
 	};
+
+	const handleClick = (ev: any) => {
+		switch (ev.key) {
+			case "yammer#message":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MessageWidget />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MessageWidget />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MessageWidget />
+							}
+						]);
+						break;
+				}
+				break;
+			case "yammer#group":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <FollowingMessages />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <FollowingMessages />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <FollowingMessages />
+							}
+						]);
+						break;
+				}
+
+				break;
+			case "yammer#personnalMsg":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PersonnalMessages />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PersonnalMessages />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PersonnalMessages />
+							}
+						]);
+						break;
+				}
+				break;
+			case "outlook#mails":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <OutlookMails />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <OutlookMails />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <OutlookMails />
+							}
+						]);
+						break;
+				}
+				break;
+			case "epi#alerts":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Alerts />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Alerts />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Alerts />
+							}
+						]);
+						break;
+				}
+				break;
+			case "epi#grades":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Modules />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Modules />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <Modules />
+							}
+						]);
+						break;
+				}
+				break;
+			case "epi#notes":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SchoolNotes />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SchoolNotes />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SchoolNotes />
+							}
+						]);
+						break;
+				}
+				break;
+		}
+	};
+
+	const tabChange = (tab: any) => {
+		setActiveTab(tab);
+	};
+
 	useEffect(() => {
 		const servs = `Actually ${props.services.length} services are up! Please link your accounts in settings section!`;
 		notification["warning"]({
@@ -166,7 +437,7 @@ const Dashboard: React.FC = (props: any) => {
 								epitechService === undefined ? "#eb2f96" : "#52c41a"
 							}
 						/>
-						Alerts
+						Notifications
 					</Menu.Item>
 					<Menu.Item
 						disabled={epitechService === undefined}
@@ -184,17 +455,22 @@ const Dashboard: React.FC = (props: any) => {
 						/>
 						Grades
 					</Menu.Item>
-					<Menu.Item disabled={epitechService === undefined} key="7">
+					<Menu.Item
+						disabled={epitechService === undefined}
+						key={"epi#notes"}
+						onClick={handleClick}
+					>
 						<Icon
 							type={
 								epitechService === undefined ? "close-circle" : "plus-circle"
 							}
 							theme="twoTone"
+							onClick={handleClick}
 							twoToneColor={
 								epitechService === undefined ? "#eb2f96" : "#52c41a"
 							}
 						/>
-						Widget lol
+						School Notes
 					</Menu.Item>
 				</SubMenu>
 				<SubMenu
@@ -218,7 +494,7 @@ const Dashboard: React.FC = (props: any) => {
 							theme="twoTone"
 							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
 						/>
-						Messages
+						Feed messages
 					</Menu.Item>
 					<Menu.Item
 						disabled={yammerService === undefined}
@@ -232,9 +508,13 @@ const Dashboard: React.FC = (props: any) => {
 							theme="twoTone"
 							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
 						/>
-						Group messages
+						Group threads
 					</Menu.Item>
-					<Menu.Item disabled={yammerService === undefined} key="7">
+					<Menu.Item
+						onClick={handleClick}
+						disabled={yammerService === undefined}
+						key={"yammer#personnalMsg"}
+					>
 						<Icon
 							type={
 								yammerService === undefined ? "close-circle" : "plus-circle"
@@ -242,7 +522,7 @@ const Dashboard: React.FC = (props: any) => {
 							theme="twoTone"
 							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
 						/>
-						Widget lol
+						Personnal Messages
 					</Menu.Item>
 				</SubMenu>
 				<SubMenu
@@ -296,21 +576,48 @@ const Dashboard: React.FC = (props: any) => {
 					</Menu.Item>
 				</SubMenu>
 			</Menu>
-			<Tabs tabPosition="top" style={{ width: "100%", overflow: "auto" }}>
-				<TabPane tab="Dashboard #1" key="1">
+			<Tabs
+				onChange={tabChange}
+				defaultActiveKey="tab1"
+				tabPosition="top"
+				style={{ width: "100%", overflow: "auto" }}
+			>
+				<TabPane tab="Dashboard #1" key="tab1">
 					<ResponsiveReactGridLayout
 						className="layout"
-						layout={layout}
+						layout={layout1}
 						cols={20}
 						autoSize={true}
 						rowHeight={30}
 						width={window.screen.width}
 					>
-						{layout.map(item => createElement(item))}
+						{layout1.map((item: any) => createElement(item))}
 					</ResponsiveReactGridLayout>
 				</TabPane>
-				<TabPane tab="Dashboard #2" key="2"></TabPane>
-				<TabPane tab="Dashboard #3" key="3"></TabPane>
+				<TabPane tab="Dashboard #2" key="tab2">
+					<ResponsiveReactGridLayout
+						className="layout"
+						layout={layout2}
+						cols={20}
+						autoSize={true}
+						rowHeight={30}
+						width={window.screen.width}
+					>
+						{layout2.map((item:any ) => createElement(item))}
+					</ResponsiveReactGridLayout>
+				</TabPane>
+				<TabPane tab="Dashboard #3" key="tab3">
+					<ResponsiveReactGridLayout
+						className="layout"
+						layout={layout3}
+						cols={20}
+						autoSize={true}
+						rowHeight={30}
+						width={window.screen.width}
+					>
+						{layout3.map((item: any) => createElement(item))}
+					</ResponsiveReactGridLayout>
+				</TabPane>
 			</Tabs>
 		</Container>
 	);

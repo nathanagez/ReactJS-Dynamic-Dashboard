@@ -24,7 +24,7 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 	const yammer = props.services.find(
 		(item: any) => item.serviceName === "yammer"
 	);
-	
+
 	const headers = {
 		headers: {
 			Authorization: `Bearer ${yammer.serviceToken}`
@@ -45,17 +45,30 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 	};
 
 	const getMessage = async (group_id: any) => {
-		try {
-			setLoading(true);
-			const res = await axios.get(
-				`https://api.yammer.com/api/v1/messages/in_group/${group_id}.json`,
-				headers
-			);
+		setLoading(true);
+		const res = await axios.get(
+			`https://api.yammer.com/api/v1/messages/in_group/${group_id}?threaded=true.json`,
+			headers
+		);
+		const { messages } = res.data;
+		Promise.all(
+			messages.map(async (message: any) => {
+				const res = await getUsers(message.sender_id);
+				message.username = res.data.full_name;
+				return message;
+			})
+		).then((results: any) => {
+			console.log(results);
+			setMessages(results);
 			setLoading(false);
-			setMessages(res.data.messages);
-		} catch (error) {
-			setLoading(false);
-		}
+		});
+	};
+
+	const getUsers = (userId: any) => {
+		return axios.get(
+			`https://api.yammer.com/api/v1/users/${userId}.json`,
+			headers
+		);
 	};
 
 	const onMenuClick = (ev: any) => {
@@ -103,7 +116,7 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 				title={
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
-							Yammer last {limit} messages from {group}
+							Last {limit} threads from {group}
 							<Icon type="down" />
 						</a>
 					</Dropdown>
@@ -113,8 +126,25 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 					dataSource={messages.slice(0, limit)}
 					renderItem={(item: any, key) => (
 						<List.Item>
-							<Tag color="blue" onClick={() => window.open(item.web_url, "_blank")}>Open thread</Tag>
-							<Badge status="processing" key={key} text={item.body.parsed} />
+							<div>
+								<Tag
+									color="green"
+									style={{ cursor: "pointer" }}
+									onClick={() => window.open(item.web_url, "_blank")}
+								>
+									{item.username} <Icon type="link" />
+								</Tag>
+								<Tag color="purple">
+									{item.liked_by.count} <Icon type="like" />
+								</Tag>
+								<br />
+
+								<Badge
+									status={item.body.plain ? "processing" : "error"}
+									key={key}
+									text={item.body.plain ? item.body.plain : "No content"}
+								/>
+							</div>
 						</List.Item>
 					)}
 				/>

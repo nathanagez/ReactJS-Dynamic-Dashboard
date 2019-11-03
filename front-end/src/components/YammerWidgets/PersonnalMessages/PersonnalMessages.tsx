@@ -8,7 +8,7 @@ const Container = styled.div`
 	height: 100%;
 `;
 
-const MessageWidgetWrapper: React.FC = (props: any) => {
+const PersonnalMessagesWrapper: React.FC = (props: any) => {
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [limit, setLimit] = useState(20);
@@ -28,25 +28,22 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 	};
 
 	const getMessages = async () => {
-		try {
-			setLoading(true);
-			const res = await axios.get(
-				"https://api.yammer.com/api/v1/messages/my_feed.json",
-				headers
-			);
-			Promise.all(
-				res.data.messages.map(async (message: any) => {
-					const res = await getUsers(message.sender_id);
-					message.username = res.data.full_name;
-					return message;
-				})
-			).then((results: any) => {
-				setMessages(results);
-				setLoading(false);
-			});
-		} catch (error) {
+		setLoading(true);
+		const res = await axios.get(
+			"https://api.yammer.com/api/v1/messages/received.json?threaded=true",
+			headers
+		);
+		console.log(res.data);
+		Promise.all(
+			res.data.messages.map(async (message: any) => {
+				const res = await getUsers(message.sender_id);
+				message.username = res.data.full_name;
+				return message;
+			})
+		).then((results: any) => {
+			setMessages(results);
 			setLoading(false);
-		}
+		});
 	};
 
 	const getUsers = (userId: any) => {
@@ -73,7 +70,7 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 				title={
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
-							Last {limit} feed messages <Icon type="down" />
+							Last {limit} personnal messages <Icon type="down" />
 						</a>
 					</Dropdown>
 				}
@@ -90,8 +87,16 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 								>
 									{item.username} <Icon type="link" />
 								</Tag>
+								<Tag color="purple">
+									{item.liked_by.count} <Icon type="like" />
+								</Tag>
 								<br />
-								<Badge status="processing" key={key} text={item.body.plain} />
+
+								<Badge
+									status={item.body.plain ? "processing" : "error"}
+									key={key}
+									text={item.body.plain ? item.body.plain : "No content"}
+								/>
 							</div>
 						</List.Item>
 					)}
@@ -101,4 +106,4 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 	);
 };
 
-export { MessageWidgetWrapper };
+export { PersonnalMessagesWrapper };

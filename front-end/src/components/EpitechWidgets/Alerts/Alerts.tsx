@@ -13,7 +13,8 @@ const AlertsWrapper: React.FC = (props: any) => {
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [scope, setScope] = useState("missed");
-
+	const title = scope.charAt(0).toUpperCase() + scope.slice(1);
+	
 	useEffect(() => {
 		getNotifications();
 	}, [scope]);
@@ -21,9 +22,26 @@ const AlertsWrapper: React.FC = (props: any) => {
 	const getNotifications = () => {
 		setLoading(true);
 		console.log(scope);
-		if (scope === "alert" || scope === "message") {
+		if (scope === "alert") {
 			axios
 				.get(`http://localhost:5000/epitech/${scope}`, {
+					headers: {
+						Authorization: token
+					}
+				})
+				.then(res => {
+					setLoading(false);
+					console.log(res.data);
+					setMessages([]);
+					setMessages(res.data.alerts);
+				})
+				.catch(err => {
+					setLoading(false);
+					console.log(err);
+				});
+		} else if (scope === "activity") {
+			axios
+				.get(`http://localhost:5000/epitech/message`, {
 					headers: {
 						Authorization: token
 					}
@@ -63,9 +81,9 @@ const AlertsWrapper: React.FC = (props: any) => {
 
 	const menu = (
 		<Menu onClick={handleClick}>
-			<Menu.Item key="message">message</Menu.Item>
-			<Menu.Item key="alert">alert</Menu.Item>
-			<Menu.Item key="missed">missed</Menu.Item>
+			<Menu.Item key="activity">Activity</Menu.Item>
+			<Menu.Item key="alert">Alert</Menu.Item>
+			<Menu.Item key="missed">Missed</Menu.Item>
 		</Menu>
 	);
 
@@ -77,7 +95,7 @@ const AlertsWrapper: React.FC = (props: any) => {
 				title={
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
-							Epitech {scope} notifications <Icon type="down" />
+							{title} notifications <Icon type="down" />
 						</a>
 					</Dropdown>
 				}
