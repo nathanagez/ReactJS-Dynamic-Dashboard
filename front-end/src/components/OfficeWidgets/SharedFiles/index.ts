@@ -1,0 +1,1 @@
+export {default as SharedFiles} from "./SharedFiles.wrap";

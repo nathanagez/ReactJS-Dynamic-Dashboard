@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Icon, Menu, Tabs, notification, Button } from "antd";
-import GridLayout from "react-grid-layout";
+import { Icon, Menu, Tabs, Button } from "antd";
 import ResponsiveReactGridLayout from "react-grid-layout";
 import { MessageWidget } from "../../components/YammerWidgets/MessagesWidget";
 import { FollowingMessages } from "../../components/YammerWidgets/FollwingMessages";
@@ -10,6 +9,8 @@ import { Alerts } from "../../components/EpitechWidgets/Alerts";
 import { Modules } from "../../components/EpitechWidgets/Modules";
 import { PersonnalMessages } from "../../components/YammerWidgets/PersonnalMessages";
 import { SchoolNotes } from "../../components/EpitechWidgets/SchoolNotes";
+import { CalendarEvents } from "../../components/OfficeWidgets/CalendarEvents";
+import { SharedFiles } from "../../components/OfficeWidgets/SharedFiles";
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -22,7 +23,7 @@ const Container = styled.div`
 `;
 
 const Dashboard: React.FC = (props: any) => {
-	const menuLayout: any = []
+	const menuLayout: any = [];
 	const [layout1, setLayout1] = useState(menuLayout);
 	const [layout2, setLayout2] = useState(menuLayout);
 	const [layout3, setLayout3] = useState(menuLayout);
@@ -214,6 +215,49 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
+			case "outlook#calendar":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CalendarEvents />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CalendarEvents />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CalendarEvents />
+							}
+						]);
+						break;
+				}
+				break;
 			case "outlook#mails":
 				switch (activeTab) {
 					case "tab1":
@@ -295,6 +339,49 @@ const Dashboard: React.FC = (props: any) => {
 								w: 6,
 								h: 10,
 								component: <Alerts />
+							}
+						]);
+						break;
+				}
+				break;
+			case "outlook#files":
+				switch (activeTab) {
+					case "tab1":
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SharedFiles />
+							}
+						]);
+						break;
+					case "tab2":
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SharedFiles />
+							}
+						]);
+						break;
+					case "tab3":
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <SharedFiles />
 							}
 						]);
 						break;
@@ -392,14 +479,6 @@ const Dashboard: React.FC = (props: any) => {
 	const tabChange = (tab: any) => {
 		setActiveTab(tab);
 	};
-
-	useEffect(() => {
-		const servs = `Actually ${props.services.length} services are up! Please link your accounts in settings section!`;
-		notification["warning"]({
-			message: "Link your accounts!",
-			description: servs
-		});
-	}, []);
 
 	const yammerService = props.services.find(
 		(item: any) => item.serviceName === "yammer"
@@ -548,9 +627,13 @@ const Dashboard: React.FC = (props: any) => {
 								office365Service === undefined ? "#eb2f96" : "#52c41a"
 							}
 						/>
-						Outlook mails
+						Outlook Mails
 					</Menu.Item>
-					<Menu.Item key="10" disabled={office365Service === undefined}>
+					<Menu.Item
+						onClick={handleClick}
+						key={"outlook#calendar"}
+						disabled={office365Service === undefined}
+					>
 						<Icon
 							type={
 								office365Service === undefined ? "close-circle" : "plus-circle"
@@ -560,9 +643,13 @@ const Dashboard: React.FC = (props: any) => {
 								office365Service === undefined ? "#eb2f96" : "#52c41a"
 							}
 						/>
-						Option 10
+						Outlook Calendar
 					</Menu.Item>
-					<Menu.Item key="11" disabled={office365Service === undefined}>
+					<Menu.Item
+						onClick={handleClick}
+						key={"outlook#files"}
+						disabled={office365Service === undefined}
+					>
 						<Icon
 							type={
 								office365Service === undefined ? "close-circle" : "plus-circle"
@@ -572,7 +659,7 @@ const Dashboard: React.FC = (props: any) => {
 								office365Service === undefined ? "#eb2f96" : "#52c41a"
 							}
 						/>
-						Option 11
+						Shared Files
 					</Menu.Item>
 				</SubMenu>
 			</Menu>
@@ -603,7 +690,7 @@ const Dashboard: React.FC = (props: any) => {
 						rowHeight={30}
 						width={window.screen.width}
 					>
-						{layout2.map((item:any ) => createElement(item))}
+						{layout2.map((item: any) => createElement(item))}
 					</ResponsiveReactGridLayout>
 				</TabPane>
 				<TabPane tab="Dashboard #3" key="tab3">

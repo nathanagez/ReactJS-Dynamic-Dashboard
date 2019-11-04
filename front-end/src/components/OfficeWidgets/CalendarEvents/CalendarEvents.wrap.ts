@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { OutlookMailsWrapper } from "./OutlookMails";
+import { CalendarWrapper } from "./CalendarEvents";
 
 const mapStateToProps = (state: any) => {
 	return {
@@ -9,4 +9,4 @@ const mapStateToProps = (state: any) => {
 export default connect(
 	mapStateToProps,
 	null
-)(OutlookMailsWrapper);
+)(CalendarWrapper);
