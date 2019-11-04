@@ -14,7 +14,7 @@ export const checkToken = () => {
 		const token = window.localStorage.getItem("token");
 		if (token) {
 			axios
-				.get("http://localhost:5000/user", {
+				.get(`${process.env.REACT_APP_BASEURL}/user`, {
 					headers: {
 						"Authorization": token
 					}

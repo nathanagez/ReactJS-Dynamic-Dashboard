@@ -24,7 +24,7 @@ const AlertsWrapper: React.FC = (props: any) => {
 		console.log(scope);
 		if (scope === "alert") {
 			axios
-				.get(`http://localhost:5000/epitech/${scope}`, {
+				.get(`${process.env.REACT_APP_BASEURL}/epitech/${scope}`, {
 					headers: {
 						Authorization: token
 					}
@@ -41,7 +41,7 @@ const AlertsWrapper: React.FC = (props: any) => {
 				});
 		} else if (scope === "activity") {
 			axios
-				.get(`http://localhost:5000/epitech/message`, {
+				.get(`${process.env.REACT_APP_BASEURL}/epitech/message`, {
 					headers: {
 						Authorization: token
 					}
@@ -58,7 +58,7 @@ const AlertsWrapper: React.FC = (props: any) => {
 				});
 		} else {
 			axios
-				.get(`http://localhost:5000/epitech/${scope}`, {
+				.get(`${process.env.REACT_APP_BASEURL}/epitech/${scope}`, {
 					headers: {
 						Authorization: token
 					}

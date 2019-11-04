@@ -23,7 +23,7 @@ const SchoolNotesWrapper: React.FC = (props: any) => {
 	const getModules = () => {
 		setLoading(true);
 		axios
-			.get(`http://localhost:5000/epitech/user/`, {
+			.get(`${process.env.REACT_APP_BASEURL}/epitech/user/`, {
 				headers: {
 					Authorization: token
 				}

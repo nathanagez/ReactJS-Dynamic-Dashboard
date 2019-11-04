@@ -17,7 +17,7 @@ export const saveOfficeToken = (code: any) => {
 		const token: String | null = window.localStorage.getItem("token");
 		axios
 			.post(
-				"http://localhost:5000/add_office",
+				`${process.env.REACT_APP_BASEURL}/add_office`,
 				{ code },
 				{
 					headers: {
@@ -50,7 +50,7 @@ export const saveServiceToken = ({
 		const token: String | null = window.localStorage.getItem("token");
 		axios
 			.post(
-				"http://localhost:5000/add_service",
+				 `${process.env.REACT_APP_BASEURL}/add_service`,
 				{ serviceName, serviceToken },
 				{
 					headers: {
@@ -79,7 +79,7 @@ export const getServices = () => {
 		const token: String | null = window.localStorage.getItem("token");
 		dispatch({ type: GET_SERVICES });
 		axios
-			.get("http://localhost:5000/services", {
+			.get(`${process.env.REACT_APP_BASEURL}/services`, {
 				headers: {
 					Authorization: token
 				}

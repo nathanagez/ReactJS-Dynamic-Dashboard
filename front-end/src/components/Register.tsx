@@ -32,7 +32,7 @@ const Register: React.FC = (props: any) => {
 			if (!err) {
 				console.log("Received values of form: ", values);
 				axios
-					.post("http://localhost:5000/register", {
+					.post(`${process.env.REACT_APP_BASEURL}/register`, {
 						username: values.username,
 						email: values.email,
 						password: values.password

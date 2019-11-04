@@ -2,7 +2,8 @@ import os
 import sys
 import hashlib
 import jwt
-from flask import Flask, jsonify, request, Response
+import time
+from flask import Flask, jsonify, request, Response, render_template, send_from_directory
 from pymongo import MongoClient
 from bson import json_util
 from bson.objectid import ObjectId
@@ -13,7 +14,7 @@ import requests
 from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./www/")
 CORS(app)
 
 
@@ -25,7 +26,7 @@ client = MongoClient(
 db = client["dashboard"]
 
 # Register route
-@app.route('/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     users = db.users
     try:
@@ -44,7 +45,7 @@ def register():
     return jsonify({'success': False, 'message': 'User already exist with this email'}), 400
 
 # Login route
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     users = db.users
     try:
@@ -109,7 +110,7 @@ def set_allow_origin(resp):
 
 def hook():
     # Allow the actual method
-    if request.endpoint != 'login' and request.endpoint != 'register':
+    if request.endpoint != 'login' and request.endpoint != 'register' and request.endpoint != 'catch_all':
         print(request.headers.get('Authorization'), file=sys.stderr)
         try:
             jwt.decode(request.headers.get(
@@ -118,7 +119,7 @@ def hook():
             return jsonify({'success': False, 'message': 'Invalid token'}), 403
 
 
-@app.route('/user', methods=['GET'])
+@app.route('/api/user', methods=['GET'])
 def getUser():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     users = db.users
@@ -129,7 +130,7 @@ def getUser():
     return jsonify({'success': True, 'userData': user}), 200
 
 
-@app.route('/add_service', methods=['POST'])
+@app.route('/api/add_service', methods=['POST'])
 def addService():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     services = db.services
@@ -153,7 +154,7 @@ def addService():
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
 
-@app.route('/services', methods=['GET'])
+@app.route('/api/services', methods=['GET'])
 def getServices():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     print(token['payload']['_id'], file=sys.stderr)
@@ -163,7 +164,7 @@ def getServices():
     return Response(json.dumps(user_services, default=json_util.default), headers={'Content-Type': 'application/json'})
 
 
-@app.route('/add_office', methods=['POST'])
+@app.route('/api/add_office', methods=['POST'])
 def addOffice():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     userId = token['payload']['_id']
@@ -182,7 +183,7 @@ def addOffice():
         {"serviceName": "office365", "userId": token['payload']['_id']})
     if service is None:
         new_service = services.insert_one(
-            {"serviceName": "office365", "serviceToken": data['access_token'], "refresh_token": data['refresh_token'],"userId": userId}).inserted_id
+            {"serviceName": "office365", "serviceToken": data['access_token'], "refresh_token": data['refresh_token'], "userId": userId}).inserted_id
         # print(new_user, file=sys.stderr)
         user_services = list(services.find(
             {"userId": token['payload']['_id']}))
@@ -191,7 +192,8 @@ def addOffice():
                                  "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
-@app.route('/update_officeToken', methods=['GET'])
+
+@app.route('/api/update_officeToken', methods=['GET'])
 def updateToken():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     services = db.services
@@ -209,31 +211,176 @@ def updateToken():
                                  "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
     return jsonify({'success': True, 'message': "Service updated"}), 200
 
-@app.route('/epitech/<path>', methods=['GET'])
+
+@app.route('/api/epitech/<path>', methods=['GET'])
 def epitechApi(path):
     print(path, file=sys.stderr)
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     services = db.services
     service = services.find_one(
         {"serviceName": "epitech", "userId": token['payload']['_id']})
-    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/notification/" + path + "?format=json");
+    r = requests.get("https://intra.epitech.eu/auth-" +
+                     service['serviceToken'] + "/user/notification/" + path + "?format=json")
     print(r, file=sys.stderr)
     data = r.json()
     return jsonify({'success': True, 'alerts': data}), 200
 
-@app.route('/epitech/user/', methods=['GET'])
+
+@app.route('/api/epitech/user/', methods=['GET'])
 def epitechUser():
     token = jwt.decode(request.headers['Authorization'], secret, verify=True)
     services = db.services
     service = services.find_one(
         {"serviceName": "epitech", "userId": token['payload']['_id']})
-    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/?format=json");
+    r = requests.get("https://intra.epitech.eu/auth-" +
+                     service['serviceToken'] + "/user/?format=json")
     data = r.json()
     print(data["login"], file=sys.stderr)
-    r = requests.get("https://intra.epitech.eu/auth-" + service['serviceToken'] + "/user/" + data["login"] + "/notes/" "?format=json");
+    r = requests.get("https://intra.epitech.eu/auth-" +
+                     service['serviceToken'] + "/user/" + data["login"] + "/notes/" "?format=json")
     #print(a, file=sys.stderr)
     data = r.json()
     return jsonify({'success': True, 'user_data': data}), 200
 
+# @app.route('/about.json', methos=['GET'])
+@app.route('/<path:path>')
+def catch_all(path):
+    print("path" + path, file=sys.stderr)
+    return send_from_directory(app.static_folder, "index.html")
+
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith("/api/"):
+        return jsonify(message="Resource not found"), 404
+    return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route('/about.json', methods=['GET'])
+def about():
+    json = {
+        "customer": {
+            "host": request.remote_addr
+        },
+        "server": {
+            "current_time ": int(time.time()),
+            "services": [{
+                "name": "Epitech",
+                "widgets": [{
+                    "name": "alerts",
+                    "description ": "Display user alerts",
+                    "params": [{
+                        "name": "user",
+                        "type": "string"
+                    },
+                        {
+                        "name": "scope",
+                        "type": "string"
+                    },
+                    {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "modules",
+                    "description": "Display grades of different modules",
+                    "params": [
+                    {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "notes",
+                    "description": "Display notes of different projects",
+                    "params": [{
+                        "name": "module_code",
+                        "type": "string"
+                    }, {
+                        "name": "token",
+                        "type": "integer"
+                    }]
+                }]
+            }, {
+                "name": "Yammer",
+                "widgets": [{
+                    "name": "feed",
+                    "description": "Display last X feed messages",
+                    "params": [{
+                        "name": "limit",
+                        "type": "integer"
+                    }, {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "threads",
+                    "description": "Display last X message from Y thread",
+                    "params": [{
+                        "name": "limit",
+                        "type": "integer"
+                    },{
+                        "name": "thread_id",
+                        "type": "integer"
+                    },{
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "personnal_messages",
+                    "description": "Display last X personnal messages",
+                    "params": [{
+                        "name": "limit",
+                        "type": "integer"
+                    }, {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                }]
+            },
+            {"name": "Office365",
+                "widgets": [{
+                    "name": "shared_files",
+                    "description": "Display shared files with connected user",
+                    "params": [{
+                        "name": "filter",
+                        "type": "string"
+                    }, {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "calendar",
+                    "description": "Display events on calendar",
+                    "params": [{
+                        "name": "date",
+                        "type": "date"
+                    },{
+                        "name": "token",
+                        "type": "string"
+                    }]
+                },
+                {
+                    "name": "outlook_mails",
+                    "description": "Display last X mails",
+                    "params": [{
+                        "name": "limit",
+                        "type": "integer"
+                    }, {
+                        "name": "token",
+                        "type": "string"
+                    }]
+                }]
+            }]
+        }
+    }
+
+    return jsonify(json), 200
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=80)

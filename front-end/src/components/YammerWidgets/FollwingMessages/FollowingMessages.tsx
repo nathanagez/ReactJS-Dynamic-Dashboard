@@ -79,7 +79,7 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 		/*
 		intervalId = setInterval(() => {
 			getMessage(ev.keyPath[0]);
-        }, 5000);
+        }, 8080);
         */
 	};
 

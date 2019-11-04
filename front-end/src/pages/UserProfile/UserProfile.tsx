@@ -109,7 +109,7 @@ const UserProfile: React.FC = (props: any) => {
 				}
 				onClick={() =>
 					onButtonClick(
-						"https://www.yammer.com/oauth2/authorize?client_id=oaeaGzaLetwE3X0U3JirQ&response_type=token&redirect_uri=http://localhost:3000/oauth/yammer"
+						"https://www.yammer.com/oauth2/authorize?client_id=oaeaGzaLetwE3X0U3JirQ&response_type=token&redirect_uri=http://localhost:8080/oauth/yammer"
 					)
 				}
 			>

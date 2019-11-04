@@ -10,7 +10,7 @@ export const logUserIn = (data: { email: String; password: String }) => {
 	return (dispatch: any) => {
 		dispatch({ type: LOGGIN_IN });
 		axios
-			.post("http://localhost:5000/login", {
+			.post(`${process.env.REACT_APP_BASEURL}/login`, {
 				email: data.email,
 				password: data.password
 			})

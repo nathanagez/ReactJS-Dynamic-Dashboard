@@ -1,16 +1,15 @@
 version: '3.7'
 services:
   server:
-    build: ./front-end
+    build: .
     ports:
       - '8080:80'
     networks: 
-        - api
-  backend:
-    build: ./backend
-    ports:
-        - "3001:3001"
-    networks: 
-        - api
+      - api
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - api
 networks: 
     api:

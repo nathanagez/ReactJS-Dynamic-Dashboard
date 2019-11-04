@@ -36,7 +36,7 @@ const SharedFilesWrapper = (props: any) => {
 				if (err.response.data.error.message === "Access token has expired.") {
 					setLoading(true);
 					axios
-						.get("http://localhost:5000/update_officeToken", {
+						.get(`${process.env.REACT_APP_BASEURL}/update_officeToken`, {
 							headers: {
 								Authorization: token
 							}
