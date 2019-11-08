@@ -8,18 +8,26 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any;
+
 const FollowingMessagesWrapper: React.FC = (props: any) => {
-	let intervalId: number = 0;
 	const [messages, setMessages] = useState([]);
 	const [group, setGroup] = useState(null);
 	const [limit, setLimit] = useState(0);
 	const [groups, setGroups] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [timer, setTimer] = useState(5);
+	
 	const { SubMenu } = Menu;
 
 	useEffect(() => {
 		getCurrentUser();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			console.log(intervalId);
+			getCurrentUser();
+		}, timer * 60 * 1000);
+	}, [timer]);
 
 	const yammer = props.services.find(
 		(item: any) => item.serviceName === "yammer"
@@ -58,7 +66,6 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 				return message;
 			})
 		).then((results: any) => {
-			console.log(results);
 			setMessages(results);
 			setLoading(false);
 		});
@@ -72,16 +79,26 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 	};
 
 	const onMenuClick = (ev: any) => {
-		// clearInterval(intervalId);
 		setLimit(ev.keyPath[1]);
 		setGroup(ev.item.props.children);
 		getMessage(ev.keyPath[0]);
-		/*
-		intervalId = setInterval(() => {
-			getMessage(ev.keyPath[0]);
-        }, 8080);
-        */
 	};
+
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
+
 
 	const menu = (
 		<Menu onClick={onMenuClick}>
@@ -117,6 +134,14 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							Last {limit} threads from {group}
+							<Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
 							<Icon type="down" />
 						</a>
 					</Dropdown>

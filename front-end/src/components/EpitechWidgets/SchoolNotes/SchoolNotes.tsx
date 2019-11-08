@@ -8,17 +8,39 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any;
+
 const SchoolNotesWrapper: React.FC = (props: any) => {
 	const token = window.localStorage.getItem("token");
 	const [grades, setGrades] = useState([]);
 	const [modules, setModules] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [codeModule, setCodeModule] = useState(null);
+	const [timer, setTimer] = useState(5);
 	const { SubMenu } = Menu;
 
 	useEffect(() => {
 		getModules();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			getModules();
+		}, timer * 60 * 1000);
+	}, [timer]);
+
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
 
 	const getModules = () => {
 		setLoading(true);
@@ -116,6 +138,14 @@ const SchoolNotesWrapper: React.FC = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							Notes from {codeModule} <Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
 						</a>
 					</Dropdown>
 				}

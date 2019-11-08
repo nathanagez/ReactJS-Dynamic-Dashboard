@@ -22,6 +22,17 @@ const Container = styled.div`
 	display: flex;
 `;
 
+const WidgetContainer = styled.div<any>`
+
+-webkit-box-shadow: ${(props: any) =>
+	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
+-moz-box-shadow: ${(props: any) =>
+	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
+box-shadow: ${(props: any) =>
+	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
+
+`;
+
 const Dashboard: React.FC = (props: any) => {
 	const menuLayout: any = [];
 	const [layout1, setLayout1] = useState(menuLayout);
@@ -29,28 +40,48 @@ const Dashboard: React.FC = (props: any) => {
 	const [layout3, setLayout3] = useState(menuLayout);
 	const [activeTab, setActiveTab] = useState("tab1");
 
+	const [visible, setVisible] = useState({ id: null, state: false });
+
+	const handleDoubleClick = (ev: any, id: any) => {
+		console.log(ev);
+		setVisible({ id: id, state: !visible.state });
+	};
+
+	useEffect(() => {
+		console.log(visible);
+	});
+
 	const createElement = (el: any) => {
 		return (
-			<div key={el.i}>
-				<Button
-					onClick={() => handleClose(el.i)}
-					shape="circle"
-					style={{
-						position: "absolute",
-						right: "12px",
-						top: "12px",
-						zIndex: 1
-					}}
-					type="dashed"
-					icon="close"
-				/>
+			<WidgetContainer
+				anim={visible.state && visible.id === el.i}
+				onDoubleClick={ev => handleDoubleClick(ev, el.i)}
+				key={el.i}
+			>
+				{visible.state && visible.id === el.i ? (
+					<Button
+						type="danger"
+						onClick={() => handleClose(el.i)}
+						shape="circle"
+						style={{
+							position: "absolute",
+							zIndex: 1,
+							right: "-15px",
+							top: "-15px"
+						}}
+					>
+						<Icon type="close" />
+					</Button>
+				) : null}
 				{el.component}
-			</div>
+			</WidgetContainer>
 		);
 	};
 
 	const handleClose = (id: any) => {
 		let removeIndex = 0;
+
+		setVisible({ id: null, state: false });
 
 		switch (activeTab) {
 			case "tab1":

@@ -18,6 +18,8 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any = 0;
+
 const OutlookMailsWrapper: React.FC = (props: any) => {
 	const token = window.localStorage.getItem("token");
 	const outlookService = props.services.find(
@@ -28,6 +30,7 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 	const [folderName, setFolderName] = useState("Boite de réception");
 	const [loading, setLoading] = useState(true);
 	const [limit, setLimit] = useState(20);
+	const [timer, setTimer] = useState(5);
 
 	const getMails = () => {
 		setLoading(true);
@@ -92,7 +95,13 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 	useEffect(() => {
 		getMails();
 		getFolders();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			console.log(intervalId);
+			getMails();
+			getFolders();
+		}, timer * 60 * 1000);
+	}, [timer]);
 
 	const limits = [{ key: 5 }, { key: 10 }, { key: 15 }, { key: 20 }];
 
@@ -116,6 +125,21 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 		</Menu>
 	);
 
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
+
 	return (
 		<Container>
 			<Card
@@ -125,6 +149,14 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							Last {limit} mails from {folderName} <Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
 						</a>
 					</Dropdown>
 				}
@@ -143,12 +175,14 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 								<br />
 								<Popover
 									content={
-										<div dangerouslySetInnerHTML={{__html: item.body.content}}></div>
+										<div
+											dangerouslySetInnerHTML={{ __html: item.body.content }}
+										></div>
 									}
 									title={"Preview"}
 								>
 									<Badge
-										style={{cursor: "pointer"}}
+										style={{ cursor: "pointer" }}
 										status={item.isRead ? "success" : "processing"}
 										key={key}
 										text={`${item.subject}`}

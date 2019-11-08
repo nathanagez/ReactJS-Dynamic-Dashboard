@@ -8,14 +8,21 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any;
+
 const MessageWidgetWrapper: React.FC = (props: any) => {
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [limit, setLimit] = useState(20);
+	const [timer, setTimer] = useState(5);
 
 	useEffect(() => {
 		getMessages();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			getMessages();
+		}, timer * 60 * 1000);
+	}, [timer]);
 
 	const yammer = props.services.find(
 		(item: any) => item.serviceName === "yammer"
@@ -65,6 +72,21 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 		</Menu>
 	);
 
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
+
 	return (
 		<Container>
 			<Card
@@ -74,6 +96,14 @@ const MessageWidgetWrapper: React.FC = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							Last {limit} feed messages <Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
 						</a>
 					</Dropdown>
 				}

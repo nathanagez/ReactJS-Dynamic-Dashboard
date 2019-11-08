@@ -10,12 +10,15 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any;
+
 const SharedFilesWrapper = (props: any) => {
 	const token = window.localStorage.getItem("token");
 	const [loading, setLoading] = useState(false);
 	const [files, setFiles] = useState([]);
 	const [filter, setFilter] = useState("all");
 	const [protectedFiles, setProtectedFiles] = useState([]);
+	const [timer, setTimer] = useState(5);
 	const outlookService = props.services.find(
 		(item: any) => item.serviceName === "office365"
 	);
@@ -52,7 +55,6 @@ const SharedFilesWrapper = (props: any) => {
 	const getSubFolders = (data: any) => {
 		Promise.all(
 			data.map(async (file: any) => {
-				console.log("loul", file);
 				if (file.folder) {
 					const res = await axios.get(
 						`https://graph.microsoft.com/v1.0/drives/${file.remoteItem.parentReference.driveId}/items/${file.id}/children`,
@@ -63,7 +65,6 @@ const SharedFilesWrapper = (props: any) => {
 						}
 					);
 					file.childs = res.data.value;
-					console.log("files:", file);
 				}
 				return file;
 			})
@@ -73,9 +74,29 @@ const SharedFilesWrapper = (props: any) => {
 		});
 	};
 
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
+
 	useEffect(() => {
 		getFiles();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			console.log(intervalId);
+			getFiles();
+		}, timer * 60 * 1000);
+	}, [timer]);
 
 	const fileType = (item: any) => {
 		switch (item.file.mimeType) {
@@ -133,6 +154,14 @@ const SharedFilesWrapper = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							Filter: {filter} <Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
 						</a>
 					</Dropdown>
 				}

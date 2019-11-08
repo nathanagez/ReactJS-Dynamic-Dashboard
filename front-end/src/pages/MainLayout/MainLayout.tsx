@@ -6,25 +6,21 @@ import {
 	BrowserRouter as Router,
 	Redirect,
 	Switch,
-	Route,
-	useHistory
+	Route
 } from "react-router-dom";
 import { Dashboard } from "../Dashboard/";
 import { PrivateRoute } from "../../components/Protected/";
 import { UserProfile } from "../UserProfile";
 
 const MainLayoutWrapper: React.FC = (props: any) => {
-	//const history = useHistory();
 
 	useEffect(() => {
 		props.checkToken();
 		props.getServices();
-		console.log(props.services);
 	}, []);
 
 	return (
 		<Router>
-			{/*props.userData ? <Redirect to="/dashboard" /> : null*/}
 			<Navbar />
 			<Switch>
 				<Route exact path="/">

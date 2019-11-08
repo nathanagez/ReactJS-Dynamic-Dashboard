@@ -9,6 +9,8 @@ const Container = styled.div`
 	height: 100%;
 `;
 
+let intervalId: any = 0;
+
 const CalendarWrapper: React.FC = (props: any) => {
 	const token = window.localStorage.getItem("token");
 	const outlookService = props.services.find(
@@ -16,6 +18,7 @@ const CalendarWrapper: React.FC = (props: any) => {
 	);
 	const [calendar, setCalendar] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [timer, setTimer] = useState(5);
 
 	const getCalendar = () => {
 		setLoading(true);
@@ -48,8 +51,28 @@ const CalendarWrapper: React.FC = (props: any) => {
 
 	useEffect(() => {
 		getCalendar();
-	}, []);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			console.log(intervalId);
+			getCalendar();
+		}, timer * 60 * 1000);
+	}, [timer]);
 
+
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
 
 	const handleClick = (ev: any) => {
 		console.log(ev);
@@ -111,6 +134,14 @@ const CalendarWrapper: React.FC = (props: any) => {
 				loading={loading}
 				style={{ height: "100%", overflow: "auto" }}
 				title={"Calendar"}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
+						</a>
+					</Dropdown>
+				}
 			>
 				<Calendar
 					dateCellRender={dateCellRender}

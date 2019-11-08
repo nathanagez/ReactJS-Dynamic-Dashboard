@@ -1,23 +1,45 @@
 import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { List, Tag, Menu, Card, Button, Badge, Dropdown, Icon } from "antd";
 
 const Container = styled.div`
 	width: 100%;
 	height: 100%;
 `;
 
+let intervalId: any;
+
 const AlertsWrapper: React.FC = (props: any) => {
 	const token = window.localStorage.getItem("token");
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [scope, setScope] = useState("missed");
+	const [timer, setTimer] = useState(5);
 	const title = scope.charAt(0).toUpperCase() + scope.slice(1);
-	
+
 	useEffect(() => {
 		getNotifications();
-	}, [scope]);
+		clearInterval(intervalId);
+		intervalId = setInterval(() => {
+			getNotifications();
+		}, timer * 60 * 1000);
+	}, [scope, timer]);
+
+	const handleTimer = (ev: any) => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		setTimer(ev.key);
+	};
+
+	const timerMenu = (
+		<Menu onClick={handleTimer}>
+			<Menu.Item key={5}>5</Menu.Item>
+			<Menu.Item key={10}>10</Menu.Item>
+			<Menu.Item key={15}>15</Menu.Item>
+		</Menu>
+	);
 
 	const getNotifications = () => {
 		setLoading(true);
@@ -31,13 +53,11 @@ const AlertsWrapper: React.FC = (props: any) => {
 				})
 				.then(res => {
 					setLoading(false);
-					console.log(res.data);
 					setMessages([]);
 					setMessages(res.data.alerts);
 				})
 				.catch(err => {
 					setLoading(false);
-					console.log(err);
 				});
 		} else if (scope === "activity") {
 			axios
@@ -48,13 +68,11 @@ const AlertsWrapper: React.FC = (props: any) => {
 				})
 				.then(res => {
 					setLoading(false);
-					console.log(res.data);
 					setMessages([]);
 					setMessages(res.data.alerts);
 				})
 				.catch(err => {
 					setLoading(false);
-					console.log(err);
 				});
 		} else {
 			axios
@@ -65,12 +83,10 @@ const AlertsWrapper: React.FC = (props: any) => {
 				})
 				.then(res => {
 					setLoading(false);
-					console.log(res.data.alerts);
 					setMessages(res.data.alerts.others);
 				})
 				.catch(err => {
 					setLoading(false);
-					console.log(err);
 				});
 		}
 	};
@@ -96,6 +112,14 @@ const AlertsWrapper: React.FC = (props: any) => {
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
 							{title} notifications <Icon type="down" />
+						</a>
+					</Dropdown>
+				}
+				extra={
+					<Dropdown overlay={timerMenu}>
+						<a className="ant-dropdown-link" href="#">
+							Refresh {timer} min
+							<Icon type="down" />
 						</a>
 					</Dropdown>
 				}
