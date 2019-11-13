@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { message, Tag, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { Tag, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
 
 const Container = styled.div`
 	width: 100%;
@@ -24,7 +24,6 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 		getCurrentUser();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {
-			console.log(intervalId);
 			getCurrentUser();
 		}, timer * 60 * 1000);
 	}, [timer]);

@@ -26,14 +26,13 @@ const Login: React.FC = (props: any, state) => {
 		e.preventDefault();
 		props.form.validateFields(async (err: any, values: IForm) => {
 			if (!err) {
-				// console.log("Received values of form: ", values);
 				props.logUserIn({email: values.email, password: values.password});
 			}
 		});
 	};
 
 	useEffect(() => {
-		const {user, error} = props;
+		const {user} = props;
 		if (user) {
 			message.success('Successfully connected! 😛')
 			history.push('/dashboard')

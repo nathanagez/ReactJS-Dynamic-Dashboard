@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import {
-	message,
 	List,
 	Menu,
 	Card,
@@ -97,7 +96,6 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 		getFolders();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {
-			console.log(intervalId);
 			getMails();
 			getFolders();
 		}, timer * 60 * 1000);
@@ -106,7 +104,6 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 	const limits = [{ key: 5 }, { key: 10 }, { key: 15 }, { key: 20 }];
 
 	const handleClick = (ev: any) => {
-		console.log(ev);
 		setFolderName(ev.item.props.children);
 		const folderId = ev.key;
 		setLimit(parseInt(ev.keyPath[1]));

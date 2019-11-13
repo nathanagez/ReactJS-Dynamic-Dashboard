@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { List, Badge, Card, Tag, Icon, Dropdown, Menu, Tree } from "antd";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { List, Badge, Card, Tag, Icon, Dropdown, Menu, Tree } from 'antd';
+import styled from 'styled-components';
 
 const { TreeNode } = Tree;
-
+const { SubMenu } = Menu;
 const Container = styled.div`
 	width: 100%;
 	height: 100%;
@@ -13,30 +13,29 @@ const Container = styled.div`
 let intervalId: any;
 
 const SharedFilesWrapper = (props: any) => {
-	const token = window.localStorage.getItem("token");
-	const [loading, setLoading] = useState(false);
-	const [files, setFiles] = useState([]);
-	const [filter, setFilter] = useState("all");
-	const [protectedFiles, setProtectedFiles] = useState([]);
-	const [timer, setTimer] = useState(5);
-	const outlookService = props.services.find(
-		(item: any) => item.serviceName === "office365"
-	);
+	const token = window.localStorage.getItem('token');
+	const [ loading, setLoading ] = useState(false);
+	const [ files, setFiles ] = useState([]);
+	const [ users, setUsers ] = useState([]);
+	const [ filter, setFilter ] = useState('all');
+	const [ protectedFiles, setProtectedFiles ] = useState([]);
+	const [ timer, setTimer ] = useState(5);
+	const outlookService = props.services.find((item: any) => item.serviceName === 'office365');
 
 	const getFiles = () => {
 		setLoading(true);
 		axios
-			.get("https://graph.microsoft.com/v1.0/me/drive/sharedWithMe", {
+			.get('https://graph.microsoft.com/v1.0/me/drive/sharedWithMe', {
 				headers: {
 					Authorization: outlookService.serviceToken
 				}
 			})
-			.then(res => {
+			.then((res) => {
 				setProtectedFiles(res.data.value);
 				getSubFolders(res.data.value);
 			})
-			.catch(err => {
-				if (err.response.data.error.message === "Access token has expired.") {
+			.catch((err) => {
+				if (err.response.data.error.message === 'Access token has expired.') {
 					setLoading(true);
 					axios
 						.get(`${process.env.REACT_APP_BASEURL}/update_officeToken`, {
@@ -53,11 +52,15 @@ const SharedFilesWrapper = (props: any) => {
 	};
 
 	const getSubFolders = (data: any) => {
+		let tmpUsers: any = [];
 		Promise.all(
 			data.map(async (file: any) => {
+				// createdBy.user.displayName
+				tmpUsers.push(file.createdBy.user.displayName);
 				if (file.folder) {
 					const res = await axios.get(
-						`https://graph.microsoft.com/v1.0/drives/${file.remoteItem.parentReference.driveId}/items/${file.id}/children`,
+						`https://graph.microsoft.com/v1.0/drives/${file.remoteItem.parentReference
+							.driveId}/items/${file.id}/children`,
 						{
 							headers: {
 								Authorization: outlookService.serviceToken
@@ -69,6 +72,8 @@ const SharedFilesWrapper = (props: any) => {
 				return file;
 			})
 		).then((results: any) => {
+			let uniq: any = [ ...new Set(tmpUsers) ];
+			setUsers(uniq);
 			setFiles(results);
 			setLoading(false);
 		});
@@ -89,46 +94,50 @@ const SharedFilesWrapper = (props: any) => {
 		</Menu>
 	);
 
-	useEffect(() => {
-		getFiles();
-		clearInterval(intervalId);
-		intervalId = setInterval(() => {
-			console.log(intervalId);
+	useEffect(
+		() => {
 			getFiles();
-		}, timer * 60 * 1000);
-	}, [timer]);
+			clearInterval(intervalId);
+			intervalId = setInterval(() => {
+				getFiles();
+			}, timer * 60 * 1000);
+		},
+		[ timer ]
+	);
 
 	const fileType = (item: any) => {
 		switch (item.file.mimeType) {
-			case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+			case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 				return <Icon type="file-excel" />;
-			case "application/pdf":
+			case 'application/pdf':
 				return <Icon type="file-pdf" />;
-			case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+			case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
 				return <Icon type="file-word" />;
-			case "video/mp4":
+			case 'video/mp4':
 				return <Icon type="video-camera" />;
 			default:
 				return <Icon type="file" />;
 		}
 	};
 
-	const handleClick = ({ key }: any) => {
-		setFilter(key);
-		switch (key) {
-			case "all":
-				return protectedFiles;
-			case "folder":
+	const handleClick = (ev: any) => {
+		const len = ev.keyPath.length;
+		setFilter(ev.keyPath[1]);
+		switch (len > 1 ? ev.keyPath[1] : ev.key) {
+			case 'all':
+				setFiles(protectedFiles);
+				break;
+			case 'folder':
 				let filteredFolders = protectedFiles.filter((item: any) => {
-					if (item.folder) {
+					if (item.folder && item.createdBy.user.displayName === ev.keyPath[0]) {
 						return item;
 					}
 				});
 				setFiles(filteredFolders);
 				break;
-			case "file":
+			case 'file':
 				let filteredFiles = protectedFiles.filter((item: any) => {
-					if (item.file) {
+					if (item.file && item.createdBy.user.displayName === ev.keyPath[0]) {
 						return item;
 					}
 				});
@@ -139,9 +148,13 @@ const SharedFilesWrapper = (props: any) => {
 
 	const menu = (
 		<Menu onClick={handleClick}>
-			<Menu.Item key={"all"}>all</Menu.Item>
-			<Menu.Item key={"folder"}>folders</Menu.Item>
-			<Menu.Item key={"file"}>file</Menu.Item>
+			<Menu.Item key={'all'}>all</Menu.Item>
+			<SubMenu title="folder" key={'folder'}>
+				{users.map((user: any, key) => <Menu.Item key={user}>{user}</Menu.Item>)}
+			</SubMenu>
+			<SubMenu title="file" key={'file'}>
+				{users.map((user: any, key) => <Menu.Item key={user}>{user}</Menu.Item>)}
+			</SubMenu>
 		</Menu>
 	);
 
@@ -149,7 +162,7 @@ const SharedFilesWrapper = (props: any) => {
 		<Container>
 			<Card
 				loading={loading}
-				style={{ height: "100%", overflow: "auto" }}
+				style={{ height: '100%', overflow: 'auto' }}
 				title={
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
@@ -170,15 +183,12 @@ const SharedFilesWrapper = (props: any) => {
 					dataSource={files}
 					renderItem={(item: any, key) => (
 						<List.Item key={key}>
-							<Badge
-								count={item.createdBy.user.displayName}
-								style={{ backgroundColor: "#52c41a" }}
-							/>
+							<Badge count={item.createdBy.user.displayName} style={{ backgroundColor: '#52c41a' }} />
 							&nbsp;
 							{item.folder ? (
 								<Tag
-									style={{ cursor: "pointer" }}
-									onClick={() => window.open(item.remoteItem.webUrl, "_blank")}
+									style={{ cursor: 'pointer' }}
+									onClick={() => window.open(item.remoteItem.webUrl, '_blank')}
 									color="cyan"
 								>
 									<Icon type="folder-open" />
@@ -189,8 +199,8 @@ const SharedFilesWrapper = (props: any) => {
 								</Tag>
 							) : (
 								<Tag
-									style={{ cursor: "pointer" }}
-									onClick={() => window.open(item.remoteItem.webUrl, "_blank")}
+									style={{ cursor: 'pointer' }}
+									onClick={() => window.open(item.remoteItem.webUrl, '_blank')}
 									color="cyan"
 								>
 									Open {fileType(item)}
@@ -198,12 +208,12 @@ const SharedFilesWrapper = (props: any) => {
 							)}
 							<br />
 							{!item.folder ? (
-								<Badge status={"processing"} text={item.name} />
+								<Badge status={'processing'} text={item.name} />
 							) : (
 								<Tree
 									showIcon
 									defaultExpandAll={false}
-									onSelect={url => window.open(url[0], "_blank")}
+									onSelect={(url) => window.open(url[0], '_blank')}
 									switcherIcon={<Icon type="down" />}
 								>
 									<TreeNode
@@ -213,16 +223,10 @@ const SharedFilesWrapper = (props: any) => {
 									>
 										{item.childs.map((node: any) => (
 											<TreeNode
-												icon={
-													node.file ? (
-														fileType(node)
-													) : (
-														<Icon type="folder-open" />
-													)
-												}
+												icon={node.file ? fileType(node) : <Icon type="folder-open" />}
 												title={node.name}
 												key={node.webUrl}
-											></TreeNode>
+											/>
 										))}
 									</TreeNode>
 								</Tree>

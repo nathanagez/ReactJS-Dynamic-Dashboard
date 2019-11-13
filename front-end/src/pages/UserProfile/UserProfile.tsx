@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Input, Form, Modal, Button, Icon, Card, Tag } from "antd";
-import axios from "axios";
+import { Input, Form, Modal, Card, Tag } from "antd";
 
 const gridStyle = {
 	width: "25%",
@@ -15,10 +14,6 @@ const Container = styled.div`
 	align-items: center;
 	justify-content: space-around;
 `;
-
-function callback(key: any) {
-	console.log(key);
-}
 
 const UserProfile: React.FC = (props: any) => {
 	const [isVisible, setVisible] = useState(false);
@@ -42,13 +37,11 @@ const UserProfile: React.FC = (props: any) => {
 			});
 		} else if (url.includes("office365")) {
 			const serviceToken = url_arr[4].split("=")[1];
-			console.log(serviceToken.split("&")[0]);
 			props.saveOfficeToken(serviceToken.split("&")[0]);
 		}
 	};
 
 	const onButtonClick = (link: string) => {
-		console.log("button click");
 		window.open(link, "_self");
 	};
 
@@ -57,8 +50,6 @@ const UserProfile: React.FC = (props: any) => {
 			if (err) {
 				return;
 			}
-
-			console.log("Received values of form: ", values);
 			form.resetFields();
 			setVisible(false);
 			props.saveServiceToken({

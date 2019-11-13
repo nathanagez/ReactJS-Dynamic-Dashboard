@@ -30,7 +30,6 @@ const Register: React.FC = (props: any) => {
 		e.preventDefault();
 		props.form.validateFieldsAndScroll((err: any, values: IForm) => {
 			if (!err) {
-				console.log("Received values of form: ", values);
 				axios
 					.post(`${process.env.REACT_APP_BASEURL}/register`, {
 						username: values.username,

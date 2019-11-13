@@ -20,7 +20,6 @@ export const checkToken = () => {
 					}
 				})
 				.then(res => {
-                    console.log(res);
                     dispatch({
 						type: LOG_IN_SUCCESS,
 						payload: res.data.userData
@@ -31,7 +30,6 @@ export const checkToken = () => {
 					});
 				})
 				.catch(err => {
-					console.log(err);
 					dispatch({
 						type: IS_NOT_VALID
 					});

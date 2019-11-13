@@ -4,6 +4,7 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"typeRoots": ["@types"],
 		"noImplicitAny": false,
+		"downlevelIteration": true,
 		"allowJs": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,

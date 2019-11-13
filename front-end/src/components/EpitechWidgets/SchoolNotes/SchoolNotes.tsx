@@ -1,7 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { Table, List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { Table, Tag, Menu, Card, Dropdown, Icon } from "antd";
 
 const Container = styled.div`
 	width: 100%;
@@ -53,17 +53,14 @@ const SchoolNotesWrapper: React.FC = (props: any) => {
 			.then(res => {
 				setLoading(false);
 				setModules(res.data.user_data.modules);
-				console.log(res.data.user_data.notes);
 				setGrades(res.data.user_data.notes);
 			})
 			.catch(err => {
 				setLoading(false);
-				console.log(err);
 			});
 	};
 
 	const handleClick = (ev: any) => {
-		console.log(ev);
 		setCodeModule(ev.key.split("#")[1]);
 	};
 

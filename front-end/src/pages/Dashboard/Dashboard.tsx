@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Icon, Menu, Tabs, Button } from "antd";
-import ResponsiveReactGridLayout from "react-grid-layout";
-import { MessageWidget } from "../../components/YammerWidgets/MessagesWidget";
-import { FollowingMessages } from "../../components/YammerWidgets/FollwingMessages";
-import { OutlookMails } from "../../components/OfficeWidgets/OutlookMails";
-import { Alerts } from "../../components/EpitechWidgets/Alerts";
-import { Modules } from "../../components/EpitechWidgets/Modules";
-import { PersonnalMessages } from "../../components/YammerWidgets/PersonnalMessages";
-import { SchoolNotes } from "../../components/EpitechWidgets/SchoolNotes";
-import { CalendarEvents } from "../../components/OfficeWidgets/CalendarEvents";
-import { SharedFiles } from "../../components/OfficeWidgets/SharedFiles";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Icon, Menu, Tabs, Button } from 'antd';
+import ResponsiveReactGridLayout from 'react-grid-layout';
+import { MessageWidget } from '../../components/YammerWidgets/MessagesWidget';
+import { FollowingMessages } from '../../components/YammerWidgets/FollwingMessages';
+import { OutlookMails } from '../../components/OfficeWidgets/OutlookMails';
+import { Alerts } from '../../components/EpitechWidgets/Alerts';
+import { Modules } from '../../components/EpitechWidgets/Modules';
+import { PersonnalMessages } from '../../components/YammerWidgets/PersonnalMessages';
+import { SchoolNotes } from '../../components/EpitechWidgets/SchoolNotes';
+import { CalendarEvents } from '../../components/OfficeWidgets/CalendarEvents';
+import { SharedFiles } from '../../components/OfficeWidgets/SharedFiles';
+import CityWeather from '../../components/WeatherApi/CityWeather/CityWeather';
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -22,40 +23,37 @@ const Container = styled.div`
 	display: flex;
 `;
 
-const WidgetContainer = styled.div<any>`
+const WidgetContainer =
+	styled.div <
+	any >
+	`
 
--webkit-box-shadow: ${(props: any) =>
-	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
--moz-box-shadow: ${(props: any) =>
-	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
-box-shadow: ${(props: any) =>
-	props.anim ? "0px 0px 12px 6px rgba(212,212,212,1);" : "inherit;"}
+-webkit-box-shadow: ${(props: any) => (props.anim ? '0px 0px 12px 6px rgba(212,212,212,1);' : 'inherit;')}
+-moz-box-shadow: ${(props: any) => (props.anim ? '0px 0px 12px 6px rgba(212,212,212,1);' : 'inherit;')}
+box-shadow: ${(props: any) => (props.anim ? '0px 0px 12px 6px rgba(212,212,212,1);' : 'inherit;')}
 
 `;
 
 const Dashboard: React.FC = (props: any) => {
 	const menuLayout: any = [];
-	const [layout1, setLayout1] = useState(menuLayout);
-	const [layout2, setLayout2] = useState(menuLayout);
-	const [layout3, setLayout3] = useState(menuLayout);
-	const [activeTab, setActiveTab] = useState("tab1");
+	const [ layout1, setLayout1 ] = useState(menuLayout);
+	const [ layout2, setLayout2 ] = useState(menuLayout);
+	const [ layout3, setLayout3 ] = useState(menuLayout);
+	const [ activeTab, setActiveTab ] = useState('tab1');
 
-	const [visible, setVisible] = useState({ id: null, state: false });
+	const [ visible, setVisible ] = useState({ id: null, state: false });
 
 	const handleDoubleClick = (ev: any, id: any) => {
-		console.log(ev);
 		setVisible({ id: id, state: !visible.state });
 	};
 
-	useEffect(() => {
-		console.log(visible);
-	});
+	useEffect(() => {});
 
 	const createElement = (el: any) => {
 		return (
 			<WidgetContainer
 				anim={visible.state && visible.id === el.i}
-				onDoubleClick={ev => handleDoubleClick(ev, el.i)}
+				onDoubleClick={(ev) => handleDoubleClick(ev, el.i)}
 				key={el.i}
 			>
 				{visible.state && visible.id === el.i ? (
@@ -64,10 +62,10 @@ const Dashboard: React.FC = (props: any) => {
 						onClick={() => handleClose(el.i)}
 						shape="circle"
 						style={{
-							position: "absolute",
+							position: 'absolute',
 							zIndex: 1,
-							right: "-15px",
-							top: "-15px"
+							right: '-15px',
+							top: '-15px'
 						}}
 					>
 						<Icon type="close" />
@@ -84,41 +82,41 @@ const Dashboard: React.FC = (props: any) => {
 		setVisible({ id: null, state: false });
 
 		switch (activeTab) {
-			case "tab1":
+			case 'tab1':
 				removeIndex = layout1
 					.map(function(item: any) {
 						return item.i;
 					})
 					.indexOf(id);
 				layout1.splice(removeIndex, 1);
-				setLayout1([...layout1]);
+				setLayout1([ ...layout1 ]);
 				break;
-			case "tab2":
+			case 'tab2':
 				removeIndex = layout2
 					.map(function(item: any) {
 						return item.i;
 					})
 					.indexOf(id);
 				layout2.splice(removeIndex, 1);
-				setLayout2([...layout2]);
+				setLayout2([ ...layout2 ]);
 				break;
-			case "tab3":
+			case 'tab3':
 				removeIndex = layout3
 					.map(function(item: any) {
 						return item.i;
 					})
 					.indexOf(id);
 				layout3.splice(removeIndex, 1);
-				setLayout3([...layout3]);
+				setLayout3([ ...layout3 ]);
 				break;
 		}
 	};
 
 	const handleClick = (ev: any) => {
 		switch (ev.key) {
-			case "yammer#message":
+			case 'yammer#message':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -131,7 +129,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -144,7 +142,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -159,9 +157,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "yammer#group":
+			case 'yammer#group':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -174,7 +172,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -187,7 +185,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -203,9 +201,9 @@ const Dashboard: React.FC = (props: any) => {
 				}
 
 				break;
-			case "yammer#personnalMsg":
+			case 'yammer#personnalMsg':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -218,7 +216,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -231,7 +229,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -246,9 +244,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "outlook#calendar":
+			case 'outlook#calendar':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -261,7 +259,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -274,7 +272,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -289,9 +287,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "outlook#mails":
+			case 'outlook#mails':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -304,7 +302,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -317,7 +315,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -332,9 +330,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "epi#alerts":
+			case 'epi#alerts':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -347,7 +345,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -360,7 +358,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -375,9 +373,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "outlook#files":
+			case 'outlook#files':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -390,7 +388,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -403,7 +401,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -418,9 +416,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "epi#grades":
+			case 'epi#grades':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -433,7 +431,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -446,7 +444,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -461,9 +459,9 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
-			case "epi#notes":
+			case 'epi#notes':
 				switch (activeTab) {
-					case "tab1":
+					case 'tab1':
 						setLayout1([
 							...layout1,
 							{
@@ -476,7 +474,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab2":
+					case 'tab2':
 						setLayout2([
 							...layout2,
 							{
@@ -489,7 +487,7 @@ const Dashboard: React.FC = (props: any) => {
 							}
 						]);
 						break;
-					case "tab3":
+					case 'tab3':
 						setLayout3([
 							...layout3,
 							{
@@ -499,6 +497,49 @@ const Dashboard: React.FC = (props: any) => {
 								w: 6,
 								h: 10,
 								component: <SchoolNotes />
+							}
+						]);
+						break;
+				}
+				break;
+			case 'weather#city':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CityWeather />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CityWeather />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CityWeather />
 							}
 						]);
 						break;
@@ -511,15 +552,9 @@ const Dashboard: React.FC = (props: any) => {
 		setActiveTab(tab);
 	};
 
-	const yammerService = props.services.find(
-		(item: any) => item.serviceName === "yammer"
-	);
-	const office365Service = props.services.find(
-		(item: any) => item.serviceName === "office365"
-	);
-	const epitechService = props.services.find(
-		(item: any) => item.serviceName === "epitech"
-	);
+	const yammerService = props.services.find((item: any) => item.serviceName === 'yammer');
+	const office365Service = props.services.find((item: any) => item.serviceName === 'office365');
+	const epitechService = props.services.find((item: any) => item.serviceName === 'epitech');
 
 	return (
 		<Container>
@@ -533,52 +568,28 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item
-						disabled={epitechService === undefined}
-						onClick={handleClick}
-						key={"epi#alerts"}
-					>
+					<Menu.Item disabled={epitechService === undefined} onClick={handleClick} key={'epi#alerts'}>
 						<Icon
-							type={
-								epitechService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={epitechService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={
-								epitechService === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={epitechService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Notifications
 					</Menu.Item>
-					<Menu.Item
-						disabled={epitechService === undefined}
-						onClick={handleClick}
-						key={"epi#grades"}
-					>
+					<Menu.Item disabled={epitechService === undefined} onClick={handleClick} key={'epi#grades'}>
 						<Icon
-							type={
-								epitechService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={epitechService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={
-								epitechService === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={epitechService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Grades
 					</Menu.Item>
-					<Menu.Item
-						disabled={epitechService === undefined}
-						key={"epi#notes"}
-						onClick={handleClick}
-					>
+					<Menu.Item disabled={epitechService === undefined} key={'epi#notes'} onClick={handleClick}>
 						<Icon
-							type={
-								epitechService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={epitechService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
 							onClick={handleClick}
-							twoToneColor={
-								epitechService === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={epitechService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						School Notes
 					</Menu.Item>
@@ -592,45 +603,27 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item
-						disabled={yammerService === undefined}
-						onClick={handleClick}
-						key={"yammer#message"}
-					>
+					<Menu.Item disabled={yammerService === undefined} onClick={handleClick} key={'yammer#message'}>
 						<Icon
-							type={
-								yammerService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={yammerService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+							twoToneColor={yammerService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Feed messages
 					</Menu.Item>
-					<Menu.Item
-						disabled={yammerService === undefined}
-						onClick={handleClick}
-						key={"yammer#group"}
-					>
+					<Menu.Item disabled={yammerService === undefined} onClick={handleClick} key={'yammer#group'}>
 						<Icon
-							type={
-								yammerService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={yammerService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+							twoToneColor={yammerService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Group threads
 					</Menu.Item>
-					<Menu.Item
-						onClick={handleClick}
-						disabled={yammerService === undefined}
-						key={"yammer#personnalMsg"}
-					>
+					<Menu.Item onClick={handleClick} disabled={yammerService === undefined} key={'yammer#personnalMsg'}>
 						<Icon
-							type={
-								yammerService === undefined ? "close-circle" : "plus-circle"
-							}
+							type={yammerService === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={yammerService === undefined ? "#eb2f96" : "#52c41a"}
+							twoToneColor={yammerService === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Personnal Messages
 					</Menu.Item>
@@ -644,53 +637,43 @@ const Dashboard: React.FC = (props: any) => {
 						</span>
 					}
 				>
-					<Menu.Item
-						onClick={handleClick}
-						key={"outlook#mails"}
-						disabled={office365Service === undefined}
-					>
+					<Menu.Item onClick={handleClick} key={'outlook#mails'} disabled={office365Service === undefined}>
 						<Icon
-							type={
-								office365Service === undefined ? "close-circle" : "plus-circle"
-							}
+							type={office365Service === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={
-								office365Service === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={office365Service === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Outlook Mails
 					</Menu.Item>
-					<Menu.Item
-						onClick={handleClick}
-						key={"outlook#calendar"}
-						disabled={office365Service === undefined}
-					>
+					<Menu.Item onClick={handleClick} key={'outlook#calendar'} disabled={office365Service === undefined}>
 						<Icon
-							type={
-								office365Service === undefined ? "close-circle" : "plus-circle"
-							}
+							type={office365Service === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={
-								office365Service === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={office365Service === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Outlook Calendar
 					</Menu.Item>
-					<Menu.Item
-						onClick={handleClick}
-						key={"outlook#files"}
-						disabled={office365Service === undefined}
-					>
+					<Menu.Item onClick={handleClick} key={'outlook#files'} disabled={office365Service === undefined}>
 						<Icon
-							type={
-								office365Service === undefined ? "close-circle" : "plus-circle"
-							}
+							type={office365Service === undefined ? 'close-circle' : 'plus-circle'}
 							theme="twoTone"
-							twoToneColor={
-								office365Service === undefined ? "#eb2f96" : "#52c41a"
-							}
+							twoToneColor={office365Service === undefined ? '#eb2f96' : '#52c41a'}
 						/>
 						Shared Files
+					</Menu.Item>
+				</SubMenu>
+				<SubMenu
+					key="sub5"
+					title={
+						<span>
+							<Icon type="cloud" />
+							<span>City Weather</span>
+						</span>
+					}
+				>
+					<Menu.Item onClick={handleClick} key={'weather#city'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Weather widget
 					</Menu.Item>
 				</SubMenu>
 			</Menu>
@@ -698,11 +681,12 @@ const Dashboard: React.FC = (props: any) => {
 				onChange={tabChange}
 				defaultActiveKey="tab1"
 				tabPosition="top"
-				style={{ width: "100%", overflow: "auto" }}
+				style={{ width: '100%', overflow: 'auto' }}
 			>
 				<TabPane tab="Dashboard #1" key="tab1">
 					<ResponsiveReactGridLayout
 						className="layout"
+						draggableHandle=".react-grid-dragHandler"
 						layout={layout1}
 						cols={20}
 						autoSize={true}
@@ -715,6 +699,7 @@ const Dashboard: React.FC = (props: any) => {
 				<TabPane tab="Dashboard #2" key="tab2">
 					<ResponsiveReactGridLayout
 						className="layout"
+						draggableHandle=".react-grid-dragHandler"
 						layout={layout2}
 						cols={20}
 						autoSize={true}
@@ -727,6 +712,7 @@ const Dashboard: React.FC = (props: any) => {
 				<TabPane tab="Dashboard #3" key="tab3">
 					<ResponsiveReactGridLayout
 						className="layout"
+						draggableHandle=".react-grid-dragHandler"
 						layout={layout3}
 						cols={20}
 						autoSize={true}

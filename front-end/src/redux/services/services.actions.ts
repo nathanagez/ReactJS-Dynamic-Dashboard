@@ -1,7 +1,6 @@
 import axios from "axios";
 import {
 	ADD_SERVICE,
-	ADD_SERVICE_SUCCESS,
 	ADD_SERVICE_FAILED,
 	GET_SERVICES,
 	GET_SERVICES_SUCCESS
@@ -26,14 +25,12 @@ export const saveOfficeToken = (code: any) => {
 				}
 			)
 			.then(res => {
-				console.log(res);
 				dispatch({
 					type: GET_SERVICES_SUCCESS,
 					payload: res.data
 				});
 			})
 			.catch(err => {
-				console.log(err.response);
 				dispatch({
 					type: ADD_SERVICE_FAILED
 				});
@@ -59,14 +56,12 @@ export const saveServiceToken = ({
 				}
 			)
 			.then(res => {
-				console.log(res);
 				dispatch({
 					type: GET_SERVICES_SUCCESS,
 					payload: res.data
 				});
 			})
 			.catch(err => {
-				console.log(err.response);
 				dispatch({
 					type: ADD_SERVICE_FAILED
 				});
@@ -85,11 +80,9 @@ export const getServices = () => {
 				}
 			})
 			.then(res => {
-				console.log(res);
 				dispatch({ type: GET_SERVICES_SUCCESS, payload: res.data });
 			})
 			.catch(err => {
-				console.log(err);
 			});
 	};
 };

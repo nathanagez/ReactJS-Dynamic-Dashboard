@@ -1,7 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { List, Tag, Menu, Card, Button, Badge, Dropdown, Icon } from "antd";
+import { List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
 
 const Container = styled.div`
 	width: 100%;
@@ -43,7 +43,6 @@ const AlertsWrapper: React.FC = (props: any) => {
 
 	const getNotifications = () => {
 		setLoading(true);
-		console.log(scope);
 		if (scope === "alert") {
 			axios
 				.get(`${process.env.REACT_APP_BASEURL}/epitech/${scope}`, {

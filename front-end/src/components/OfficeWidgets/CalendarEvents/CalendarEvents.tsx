@@ -53,7 +53,6 @@ const CalendarWrapper: React.FC = (props: any) => {
 		getCalendar();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {
-			console.log(intervalId);
 			getCalendar();
 		}, timer * 60 * 1000);
 	}, [timer]);
@@ -75,7 +74,6 @@ const CalendarWrapper: React.FC = (props: any) => {
 	);
 
 	const handleClick = (ev: any) => {
-		console.log(ev);
 	};
 
 	const getCellData = (value: any) => {

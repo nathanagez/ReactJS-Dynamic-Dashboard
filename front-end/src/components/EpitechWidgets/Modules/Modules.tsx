@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
@@ -50,7 +50,6 @@ const ModulesWrapper: React.FC = (props: any) => {
 			})
 			.then(res => {
 				setLoading(false);
-				console.log(res.data.user_data);
 				setGrades(
 					res.data.user_data.modules.filter(
 						(grade: any) => grade.scolaryear == limit 
@@ -59,7 +58,6 @@ const ModulesWrapper: React.FC = (props: any) => {
 			})
 			.catch(err => {
 				setLoading(false);
-				console.log(err);
 			});
 	};
 

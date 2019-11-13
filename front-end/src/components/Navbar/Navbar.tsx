@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 // eslint-disable-next-line
-import { BrowserRouter as Router, Link, NavLink, useHistory } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 
 const Container = styled.div`
 	overflow: hidden;
