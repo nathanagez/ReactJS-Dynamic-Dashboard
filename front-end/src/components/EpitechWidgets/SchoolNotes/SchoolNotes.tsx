@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Table, Tag, Menu, Card, Dropdown, Icon } from "antd";
+import { dragHelper } from '../../drag-help';
 
 const Container = styled.div`
 	width: 100%;
@@ -20,6 +21,7 @@ const SchoolNotesWrapper: React.FC = (props: any) => {
 	const { SubMenu } = Menu;
 
 	useEffect(() => {
+		dragHelper();
 		getModules();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {

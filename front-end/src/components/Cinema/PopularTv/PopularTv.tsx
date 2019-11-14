@@ -11,12 +11,8 @@ const Container = styled.div`
 
 const genres: Array<any> = [
 	{
-		id: 28,
-		name: 'Action'
-	},
-	{
-		id: 12,
-		name: 'Adventure'
+		id: 10759,
+		name: 'Action & Adventure'
 	},
 	{
 		id: 16,
@@ -43,44 +39,36 @@ const genres: Array<any> = [
 		name: 'Family'
 	},
 	{
-		id: 14,
-		name: 'Fantasy'
-	},
-	{
-		id: 36,
-		name: 'History'
-	},
-	{
-		id: 27,
-		name: 'Horror'
-	},
-	{
-		id: 10402,
-		name: 'Music'
+		id: 10762,
+		name: 'Kids'
 	},
 	{
 		id: 9648,
 		name: 'Mystery'
 	},
 	{
-		id: 10749,
-		name: 'Romance'
+		id: 10763,
+		name: 'News'
 	},
 	{
-		id: 878,
-		name: 'Science Fiction'
+		id: 10764,
+		name: 'Reality'
 	},
 	{
-		id: 10770,
-		name: 'TV Movie'
+		id: 10765,
+		name: 'Sci-Fi & Fantasy'
 	},
 	{
-		id: 53,
-		name: 'Thriller'
+		id: 10766,
+		name: 'Soap'
 	},
 	{
-		id: 10752,
-		name: 'War'
+		id: 10767,
+		name: 'Talk'
+	},
+	{
+		id: 10768,
+		name: 'War & Politics'
 	},
 	{
 		id: 37,
@@ -90,32 +78,32 @@ const genres: Array<any> = [
 
 let intervalId: any;
 
-const PopularMovies = () => {
+const PopularTv = () => {
 	const [ timer, setTimer ] = useState(5);
 	const [ genre, setGenre ] = useState({ id: null, title: '' });
-	const [ movies, setMovies ] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [ tv, setTv ] = useState([]);
+	const [ loading, setLoading ] = useState(false);
 
 	useEffect(
 		() => {
 			dragHelper();
-			getPopularMovies();
+			getPopularTv();
 			clearInterval(intervalId);
 			intervalId = setInterval(() => {
-				getPopularMovies();
+				getPopularTv();
 			}, timer * 60 * 1000);
 		},
 		[ genre, timer ]
 	);
 
-	const getPopularMovies = async () => {
+	const getPopularTv = async () => {
 		setLoading(true);
 		const res = await axios.get(
 			`${process.env
-				.REACT_APP_MOVIEDB_APIURL}discover/movie?with_genres=${genre.id}&sort_by=popularity.desc&api_key=${process
+				.REACT_APP_MOVIEDB_APIURL}discover/tv?with_genres=${genre.id}&sort_by=popularity.desc&api_key=${process
 				.env.REACT_APP_MOVIEDB_APIKEY}`
 		);
-		setMovies(res.data.results);
+		setTv(res.data.results);
 		setLoading(false);
 	};
 
@@ -136,7 +124,7 @@ const PopularMovies = () => {
 
 	const handleClick = (ev: any) => {
 		setGenre({ id: ev.key, title: ev.item.props.children.toLowerCase() });
-		getPopularMovies();
+		getPopularTv();
 	};
 
 	const menu = (
@@ -145,7 +133,7 @@ const PopularMovies = () => {
 
 	const IconText = ({ type, text, theme, twoToneColor }) => (
 		<span>
-			<Icon theme={theme} twoToneColor={twoToneColor} type={type} style={{ marginRight: 8 }} />
+			<Icon type={type} style={{ marginRight: 8 }} theme={theme} twoToneColor={twoToneColor} />
 			{text}
 		</span>
 	);
@@ -157,7 +145,7 @@ const PopularMovies = () => {
 				title={
 					<Dropdown overlay={menu}>
 						<a className="ant-dropdown-link" href="#">
-							Popular movies in {genre.title}
+							Popular TV show in {genre.title}
 							<Icon type="down" />
 						</a>
 					</Dropdown>
@@ -175,7 +163,7 @@ const PopularMovies = () => {
 					loading={loading}
 					itemLayout="vertical"
 					size="large"
-					dataSource={movies}
+					dataSource={tv}
 					pagination={{
 						pageSize: 3
 					}}
@@ -218,4 +206,4 @@ const PopularMovies = () => {
 		</Container>
 	);
 };
-export default PopularMovies;
+export default PopularTv;

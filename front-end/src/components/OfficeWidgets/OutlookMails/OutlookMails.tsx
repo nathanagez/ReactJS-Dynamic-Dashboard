@@ -11,6 +11,8 @@ import {
 	Tag,
 	Popover
 } from "antd";
+import { dragHelper } from '../../drag-help';
+
 const { SubMenu } = Menu;
 const Container = styled.div`
 	width: 100%;
@@ -92,6 +94,7 @@ const OutlookMailsWrapper: React.FC = (props: any) => {
 	};
 
 	useEffect(() => {
+		dragHelper();
 		getMails();
 		getFolders();
 		clearInterval(intervalId);

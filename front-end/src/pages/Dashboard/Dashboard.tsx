@@ -12,6 +12,11 @@ import { SchoolNotes } from '../../components/EpitechWidgets/SchoolNotes';
 import { CalendarEvents } from '../../components/OfficeWidgets/CalendarEvents';
 import { SharedFiles } from '../../components/OfficeWidgets/SharedFiles';
 import CityWeather from '../../components/WeatherApi/CityWeather/CityWeather';
+import PopularMovies from '../../components/Cinema/PopularMovies/PopularMovies';
+import PopularTv from '../../components/Cinema/PopularTv/PopularTv';
+import MovieSearch from '../../components/Cinema/MovieSearch/MovieSearch';
+import CocktailReceipt from '../../components/Cocktails/CocktailReceipt';
+import IngredientSearch from '../../components/Cocktails/IngredientDescription';
 
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
@@ -47,7 +52,9 @@ const Dashboard: React.FC = (props: any) => {
 		setVisible({ id: id, state: !visible.state });
 	};
 
-	useEffect(() => {});
+	useEffect(() => {
+		console.log(props.layout);
+	});
 
 	const createElement = (el: any) => {
 		return (
@@ -199,7 +206,6 @@ const Dashboard: React.FC = (props: any) => {
 						]);
 						break;
 				}
-
 				break;
 			case 'yammer#personnalMsg':
 				switch (activeTab) {
@@ -545,6 +551,221 @@ const Dashboard: React.FC = (props: any) => {
 						break;
 				}
 				break;
+			case 'cinema#popularmovie':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularMovies />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularMovies />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularMovies />
+							}
+						]);
+						break;
+				}
+				break;
+			case 'cinema#populartv':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularTv />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularTv />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <PopularTv />
+							}
+						]);
+						break;
+				}
+				break;
+			case 'cinema#search':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MovieSearch />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MovieSearch />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <MovieSearch />
+							}
+						]);
+						break;
+				}
+				break;
+				case 'cocktail#receipt':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CocktailReceipt />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CocktailReceipt />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <CocktailReceipt />
+							}
+						]);
+						break;
+				}
+				break;
+				case 'cocktail#ingredient':
+				switch (activeTab) {
+					case 'tab1':
+						setLayout1([
+							...layout1,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <IngredientSearch />
+							}
+						]);
+						break;
+					case 'tab2':
+						setLayout2([
+							...layout2,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <IngredientSearch />
+							}
+						]);
+						break;
+					case 'tab3':
+						setLayout3([
+							...layout3,
+							{
+								i: (globalId++).toString(),
+								x: 0,
+								y: 0,
+								w: 6,
+								h: 10,
+								component: <IngredientSearch />
+							}
+						]);
+						break;
+				}
+				break;
 		}
 	};
 
@@ -674,6 +895,46 @@ const Dashboard: React.FC = (props: any) => {
 					<Menu.Item onClick={handleClick} key={'weather#city'}>
 						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
 						Weather widget
+					</Menu.Item>
+				</SubMenu>
+				<SubMenu
+					key="sub6"
+					title={
+						<span>
+							<Icon type="video-camera" />
+							<span>Cinema</span>
+						</span>
+					}
+				>
+					<Menu.Item onClick={handleClick} key={'cinema#popularmovie'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Popular Movies
+					</Menu.Item>
+					<Menu.Item onClick={handleClick} key={'cinema#populartv'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Popular TV
+					</Menu.Item>
+					<Menu.Item onClick={handleClick} key={'cinema#search'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Movie search
+					</Menu.Item>
+				</SubMenu>
+				<SubMenu
+					key="sub7"
+					title={
+						<span>
+							<Icon type="filter" />
+							<span>Cocktails</span>
+						</span>
+					}
+				>
+					<Menu.Item onClick={handleClick} key={'cocktail#receipt'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Cocktail Receipt
+					</Menu.Item>
+					<Menu.Item onClick={handleClick} key={'cocktail#ingredient'}>
+						<Icon type={'plus-circle'} theme="twoTone" twoToneColor={'#52c41a'} />
+						Ingredient description
 					</Menu.Item>
 				</SubMenu>
 			</Menu>

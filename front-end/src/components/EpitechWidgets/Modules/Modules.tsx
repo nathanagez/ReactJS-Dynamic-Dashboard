@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { dragHelper } from '../../drag-help';
 
 const Container = styled.div`
 	width: 100%;
@@ -18,6 +19,7 @@ const ModulesWrapper: React.FC = (props: any) => {
 	const [timer, setTimer] = useState(5);
 
 	useEffect(() => {
+		dragHelper();
 		getModules();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {

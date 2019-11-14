@@ -10,6 +10,8 @@ services:
       - ./back-end:/back-end
     networks:
       - api
+    environment: 
+      - PORT=8080
     ports:
       - "8080:8080"
   mongo:

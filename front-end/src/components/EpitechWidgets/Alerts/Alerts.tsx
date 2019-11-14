@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { List, Tag, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { dragHelper } from '../../drag-help';
 
 const Container = styled.div`
 	width: 100%;
@@ -19,6 +20,7 @@ const AlertsWrapper: React.FC = (props: any) => {
 	const title = scope.charAt(0).toUpperCase() + scope.slice(1);
 
 	useEffect(() => {
+		dragHelper();
 		getNotifications();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Calendar, Menu, Card, Dropdown, Icon, Badge, Popover } from "antd";
+import { dragHelper } from '../../drag-help';
 import moment from "moment";
 
 const Container = styled.div`
@@ -50,6 +51,7 @@ const CalendarWrapper: React.FC = (props: any) => {
 	};
 
 	useEffect(() => {
+		dragHelper();
 		getCalendar();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {

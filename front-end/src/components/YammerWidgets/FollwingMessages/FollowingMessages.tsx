@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Tag, List, Menu, Card, Badge, Dropdown, Icon } from "antd";
+import { dragHelper } from '../../drag-help';
 
 const Container = styled.div`
 	width: 100%;
@@ -21,6 +22,7 @@ const FollowingMessagesWrapper: React.FC = (props: any) => {
 	const { SubMenu } = Menu;
 
 	useEffect(() => {
+		dragHelper();
 		getCurrentUser();
 		clearInterval(intervalId);
 		intervalId = setInterval(() => {

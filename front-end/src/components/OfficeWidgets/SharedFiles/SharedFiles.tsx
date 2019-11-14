@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, Badge, Card, Tag, Icon, Dropdown, Menu, Tree } from 'antd';
+import { dragHelper } from '../../drag-help';
 import styled from 'styled-components';
 
 const { TreeNode } = Tree;
@@ -96,6 +97,7 @@ const SharedFilesWrapper = (props: any) => {
 
 	useEffect(
 		() => {
+			dragHelper();
 			getFiles();
 			clearInterval(intervalId);
 			intervalId = setInterval(() => {

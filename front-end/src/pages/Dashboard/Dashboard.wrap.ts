@@ -3,7 +3,7 @@ import {Dashboard} from "./Dashboard";
 
 const mapStateToProps = (state: any) => {
     return {
-        services: state.services.services
+        services: state.services.services,
     }
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Menu, Card, Dropdown, Icon, Avatar, List } from 'antd';
+import { Menu, Card, Dropdown, Icon, Input, List } from 'antd';
 import axios from 'axios';
 import { dragHelper } from '../../drag-help';
 
@@ -8,116 +8,37 @@ const Container = styled.div`
 	width: 100%;
 	height: 100%;
 `;
-
-const genres: Array<any> = [
-	{
-		id: 28,
-		name: 'Action'
-	},
-	{
-		id: 12,
-		name: 'Adventure'
-	},
-	{
-		id: 16,
-		name: 'Animation'
-	},
-	{
-		id: 35,
-		name: 'Comedy'
-	},
-	{
-		id: 80,
-		name: 'Crime'
-	},
-	{
-		id: 99,
-		name: 'Documentary'
-	},
-	{
-		id: 18,
-		name: 'Drama'
-	},
-	{
-		id: 10751,
-		name: 'Family'
-	},
-	{
-		id: 14,
-		name: 'Fantasy'
-	},
-	{
-		id: 36,
-		name: 'History'
-	},
-	{
-		id: 27,
-		name: 'Horror'
-	},
-	{
-		id: 10402,
-		name: 'Music'
-	},
-	{
-		id: 9648,
-		name: 'Mystery'
-	},
-	{
-		id: 10749,
-		name: 'Romance'
-	},
-	{
-		id: 878,
-		name: 'Science Fiction'
-	},
-	{
-		id: 10770,
-		name: 'TV Movie'
-	},
-	{
-		id: 53,
-		name: 'Thriller'
-	},
-	{
-		id: 10752,
-		name: 'War'
-	},
-	{
-		id: 37,
-		name: 'Western'
-	}
-];
+const { Search } = Input;
 
 let intervalId: any;
 
-const PopularMovies = () => {
+const MovieSearch = () => {
 	const [ timer, setTimer ] = useState(5);
-	const [ genre, setGenre ] = useState({ id: null, title: '' });
-	const [ movies, setMovies ] = useState([]);
+	const [movies, setMovies] = useState([]);
 	const [loading, setLoading] = useState(false);
 
-	useEffect(
-		() => {
-			dragHelper();
-			getPopularMovies();
-			clearInterval(intervalId);
-			intervalId = setInterval(() => {
-				getPopularMovies();
-			}, timer * 60 * 1000);
-		},
-		[ genre, timer ]
-	);
+	useEffect(() => {
+		dragHelper();
+		clearInterval(intervalId);
+	}, [timer]);
 
-	const getPopularMovies = async () => {
+	const searchMovie = async (query: String) => {
 		setLoading(true);
 		const res = await axios.get(
-			`${process.env
-				.REACT_APP_MOVIEDB_APIURL}discover/movie?with_genres=${genre.id}&sort_by=popularity.desc&api_key=${process
-				.env.REACT_APP_MOVIEDB_APIKEY}`
+			`${process.env.REACT_APP_MOVIEDB_APIURL}search/movie?query=${query}&api_key=${process.env
+				.REACT_APP_MOVIEDB_APIKEY}`
 		);
 		setMovies(res.data.results);
 		setLoading(false);
 	};
+
+	const handleSearch = (query: String) => {
+		clearInterval(intervalId);
+		searchMovie(query);
+		intervalId = setInterval(() => {
+			searchMovie(query);
+		}, timer * 60 * 1000);
+	}
 
 	const handleTimer = (ev: any) => {
 		if (intervalId) {
@@ -134,18 +55,9 @@ const PopularMovies = () => {
 		</Menu>
 	);
 
-	const handleClick = (ev: any) => {
-		setGenre({ id: ev.key, title: ev.item.props.children.toLowerCase() });
-		getPopularMovies();
-	};
-
-	const menu = (
-		<Menu onClick={handleClick}>{genres.map((genre) => <Menu.Item key={genre.id}>{genre.name}</Menu.Item>)}</Menu>
-	);
-
 	const IconText = ({ type, text, theme, twoToneColor }) => (
 		<span>
-			<Icon theme={theme} twoToneColor={twoToneColor} type={type} style={{ marginRight: 8 }} />
+			<Icon type={type} style={{ marginRight: 8 }} theme={theme} twoToneColor={twoToneColor} />
 			{text}
 		</span>
 	);
@@ -154,14 +66,7 @@ const PopularMovies = () => {
 		<Container>
 			<Card
 				style={{ height: '100%', overflow: 'auto' }}
-				title={
-					<Dropdown overlay={menu}>
-						<a className="ant-dropdown-link" href="#">
-							Popular movies in {genre.title}
-							<Icon type="down" />
-						</a>
-					</Dropdown>
-				}
+				title={'Seach a movie'}
 				extra={
 					<Dropdown overlay={timerMenu}>
 						<a className="ant-dropdown-link" href="#">
@@ -171,10 +76,11 @@ const PopularMovies = () => {
 					</Dropdown>
 				}
 			>
+				<Search placeholder="The Hitchhiker's Guide to the Galaxy" onSearch={(movie) => handleSearch(movie)} enterButton />
 				<List
-					loading={loading}
 					itemLayout="vertical"
 					size="large"
+					loading={loading}
 					dataSource={movies}
 					pagination={{
 						pageSize: 3
@@ -218,4 +124,4 @@ const PopularMovies = () => {
 		</Container>
 	);
 };
-export default PopularMovies;
+export default MovieSearch;
