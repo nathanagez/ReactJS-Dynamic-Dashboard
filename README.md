@@ -1,5 +1,8 @@
 # Dashboard
 
+![](demo-1.gif)
+![](demo-2.gif)
+
 ## Table of content
 
 * [How to start docker-compose in development mode ?](#dev-mode)
