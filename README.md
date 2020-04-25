@@ -1,5 +1,5 @@
 # DISCLAIMER
-This is a school project, this is not a boilerplate or a library. You can use it as an example. Some snippet of code are not clean at all, it have been made in only few days.
+This is a school project, this is not a boilerplate or a library. You can use it as an example. Some snippets of code are not clean at all, it have been made in only few days.
 
 # Dashboard
 
