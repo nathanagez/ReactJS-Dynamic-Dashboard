@@ -171,10 +171,10 @@ def addOffice():
     code = request.json['code']
     form = {'grant_type': 'authorization_code',
             'code': code,
-            'client_id': '77bf8547-6358-43aa-b5c3-7ec5c96022e3',
-            'client_secret': 'DAI6X?YK6jGw/@4C8ECZmnRponXNUVW:'}
+            'client_id':  'REPLACE',
+            'client_secret': 'REPLACE'}
     r = requests.post(
-        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/token", form)
+        "https://login.microsoftonline.com/REPLACE/oauth2/v2.0/token", form)
     print(r.json(), file=sys.stderr)
     data = r.json()
     print(data['access_token'], file=sys.stderr)
@@ -202,10 +202,10 @@ def updateToken():
     userId = token['payload']['_id']
     form = {'grant_type': 'refresh_token',
             'refresh_token': service['refresh_token'],
-            'client_id': '77bf8547-6358-43aa-b5c3-7ec5c96022e3',
-            'client_secret': 'DAI6X?YK6jGw/@4C8ECZmnRponXNUVW:'}
+            'client_id': 'REPLACE',
+            'client_secret': 'REPLACE'}
     r = requests.post(
-        "https://login.microsoftonline.com/901cb4ca-b862-4029-9306-e5cd0f6d9f86/oauth2/v2.0/token", form)
+        "https://login.microsoftonline.com/REPLACE/oauth2/v2.0/token", form)
     data = r.json()
     services.find_one_and_update({"serviceName": "office365", "userId": token['payload']['_id']}, {
                                  "$set": {"serviceToken": data['access_token'], "refresh_token": data['refresh_token']}})
